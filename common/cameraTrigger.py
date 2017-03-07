@@ -48,5 +48,5 @@ def takeRemotePic(path):
                 f.write(data)
         f.close()
     except socket.error as e:
-        print("Error occured: " + e)
+        print("Error occured: " + e.errno)
     return
