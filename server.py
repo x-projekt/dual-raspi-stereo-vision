@@ -6,7 +6,7 @@ import io
 
 # Custom modules
 from common import constantSource as cs
-import common.cameraTrigger as ct
+from common import cameraTrigger as ct
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 port = cs.getPort(cs.master_entity)
