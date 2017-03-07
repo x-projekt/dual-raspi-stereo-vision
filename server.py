@@ -9,7 +9,7 @@ from common import constantSource as cs
 from common import cameraTrigger as ct
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-port = cs.getPort(cs.master_entity)
+port = cs.getPort(cs.slave_entity)
 host = ""
 s.bind((host, port))
 s.listen(5)
@@ -23,7 +23,7 @@ while True:
         if data == cs.single_capture:
             conn = clientSocket.makefile("wb")
             stream = io.BytesIO()
-            ct.takePic(stream)
+            ct.takePic(stream, cs.stream_mode)
             conn.write(stream.read())
             conn.flush()
         elif data == cs.burst_capture:
