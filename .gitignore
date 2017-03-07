@@ -91,3 +91,5 @@ ENV/
 
 ##### Custom files/folders to ignore #####
 *.jpg
+*.png
+dmin.txt
