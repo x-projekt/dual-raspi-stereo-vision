@@ -57,9 +57,9 @@ def getCalibDataDir(calibType):
     return path
 
 def getIP(entity):
-    if entity.lower() == master_entity:
+    if entity == master_entity:
         ip = c.MASTER_IP
-    elif entity.lower() == slave_entity:
+    elif entity == slave_entity:
         ip = c.SLAVE_IP
     else:
         print("Invalid Input: invalid entity type.!")
@@ -67,9 +67,9 @@ def getIP(entity):
     return ip
 
 def getPort(entity):
-    if entity.lower() == master_entity:
+    if entity == master_entity:
         port = c.MASTER_SERVER_PORT
-    elif entity.lower() == slave_entity:
+    elif entity == slave_entity:
         port = c.SLAVE_SERVER_PORT
     else:
         print("Invalid Input: invalid entity type.!")
