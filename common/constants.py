@@ -28,3 +28,5 @@ STEREO_DIR = "stereo/"
 # File names
 CAMERA_CALIB_FILE = "_CamCalib.data"
 STEREO_CALIB_FILE = "SeteroCalib.data"
+
+TOTAL_NO_PICS = 30

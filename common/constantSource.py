@@ -81,3 +81,6 @@ def getSensorSize():
     x, y = getPixelCount()
     h, w = getPixelSize()
     return (x*h, y*w)
+
+def getCalibReq():
+    return c.TOTAL_NO_PICS
