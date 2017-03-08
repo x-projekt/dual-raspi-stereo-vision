@@ -42,25 +42,15 @@ def takeRemotePic(path):
         # Sending capture mode information to server
         clientSocket.send(cs.single_capture.encode("utf-8"))
 
-        # Saving data to file
+        
         conn = clientSocket.makefile("rb")
-
         imgLen = struct.unpack("<L", conn.read(struct.calcsize("<L")))[0]
-        stream = io.BytesIO()
-        stream.write(conn.read(imgLen))
-        stream.seek(0)
-        img = cv2.imdecode(stream)
-        cv2.imwrite(path, img)
 
+        # Saving data to file
+        f = open(path, "wb")
+        f.write(conn.read(imgLen))
+        f.close()
         conn.close()
-        # f = open(path, "wb")
-        # while True:
-        #     data = clientSocket.recv(4096)
-        #     if data:
-        #         f.write(data)
-        #     else:
-        #         break
-        # f.close()
     except socket.error as e:
         print("Error occured: " + e.errno)
     finally:

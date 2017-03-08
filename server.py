@@ -25,12 +25,13 @@ while True:
             stream = io.BytesIO()
             ct.takePic(stream, cs.stream_mode)
 
+            # Sending the image size
             conn.write(struct.pack("<L", stream.tell()))
             conn.flush()
             stream.seek(0)
 
+            # Sending the image data
             conn.write(stream.read())
-            # conn.flush()
             conn.write(struct.pack("<L", 0))
             conn.close()
         elif data == cs.burst_capture:
