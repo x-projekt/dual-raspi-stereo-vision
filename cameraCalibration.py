@@ -69,16 +69,15 @@ while True:
         cv2.destroyAllWindows()
 
         # Performing camera calibration
-        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objectPoints=objpoints,
-            imagePoints=imgpoints, imageSize=gray.shape[::-1], cameraMatrix=None,
-            distCoeffs=None)
+        ret, cameraMatrix, distCoeffs, rvecs, tvecs = cv2.calibrateCamera(objectPoints=objpoints,
+            imagePoints=imgpoints, imageSize=gray.shape[::-1], cameraMatrix=None, distCoeffs=None)
 
         # Final camera specific dataSet
-        dataSet = (mtx, dist, rvecs, tvecs)
+        dataSet = (cameraMatrix, distCoeffs, rvecs, tvecs)
 
         while True:
             q = input("Would you like to test the camera calibration " +
-                    "parameters before proceeding? (y/n): ")
+                      "parameters before proceeding? (y/n): ")
             if q.lower() == 'y':
                 source = calibDir + camType + "_skewedImage.png"
                 target = calibDir + camType + "_undistortImage.png"
@@ -99,7 +98,7 @@ while True:
                 mean_error = 0
                 tot_error = 0
                 for i in range(len(objpoints)):
-                    imgpoints2 = cv2.projectPoints(objpoints[i], rvecs[i], tvecs[i], mtx, dist)[0]
+                    imgpoints2 = cv2.projectPoints(objpoints[i], rvecs[i], tvecs[i], cameraMatrix, distCoeffs)[0]
                     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2)/len(imgpoints2)
                     tot_error += error
 
