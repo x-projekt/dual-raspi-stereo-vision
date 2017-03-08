@@ -7,7 +7,7 @@ from common import constantSource as cs
 from common import cameraRectify as cr
 from common import miscellaneous as msc
 
-TOTAL_PICS = 20
+TOTAL_PICS = cs.getCalibReq()
 
 while True:
     q = input("Do you want to perform camera caliberation? (y/n): ")
