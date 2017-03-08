@@ -1,6 +1,9 @@
 import time
 import io
 import socket
+
+# Custom modules
+import cv2
 from picamera import PiCamera
 
 # Custom moudles
@@ -39,14 +42,20 @@ def takeRemotePic(path):
         clientSocket.send(cs.single_capture.encode("utf-8"))
 
         # Saving data to file
-        f = open(path, "wb")
-        while True:
-            data = clientSocket.recv(4096)
-            if not data:
-                break
-            else:
-                f.write(data)
-        f.close()
+        file = clientSocket.makefile("rb")
+        stream = io.BytesIO()
+        stream.write(file.read())
+        img = cv2.imdecode(stream)
+        cv2.imwrite(path, img)
+
+        # f = open(path, "wb")
+        # while True:
+        #     data = clientSocket.recv(4096)
+        #     if data:
+        #         f.write(data)
+        #     else:
+        #         break
+        # f.close()
     except socket.error as e:
         print("Error occured: " + e.errno)
     return
