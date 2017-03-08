@@ -1,5 +1,6 @@
 import time
 import io
+import struct
 import socket
 
 # Custom modules
@@ -42,12 +43,16 @@ def takeRemotePic(path):
         clientSocket.send(cs.single_capture.encode("utf-8"))
 
         # Saving data to file
-        file = clientSocket.makefile("rb")
+        conn = clientSocket.makefile("rb")
+
+        imgLen = struct.unpack("<L", conn.read(struct.calcsize("<L")))[0]
         stream = io.BytesIO()
-        stream.write(file.read())
+        stream.write(conn.read(imgLen))
+        stream.seek(0)
         img = cv2.imdecode(stream)
         cv2.imwrite(path, img)
 
+        conn.close()
         # f = open(path, "wb")
         # while True:
         #     data = clientSocket.recv(4096)
@@ -58,4 +63,6 @@ def takeRemotePic(path):
         # f.close()
     except socket.error as e:
         print("Error occured: " + e.errno)
+    finally:
+        clientSocket.close()
     return

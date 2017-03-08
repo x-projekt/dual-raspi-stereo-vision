@@ -24,8 +24,15 @@ while True:
             conn = clientSocket.makefile("wb")
             stream = io.BytesIO()
             ct.takePic(stream, cs.stream_mode)
-            conn.write(stream.read())
+
+            conn.write(struct.pack("<L", stream.tell()))
             conn.flush()
+            stream.seek(0)
+
+            conn.write(stream.read())
+            # conn.flush()
+            conn.write(struct.pack("<L", 0))
+            conn.close()
         elif data == cs.burst_capture:
             # TODO: Add continuous capture functionality
             pass
