@@ -1,9 +1,11 @@
 import cv2
+
+# Custom modules
 from common import constantSource as cs
 
 def rectifyImage(dataset, sourcePath, targetPath, mode=cs.path_mode):
     if mode == cs.path_mode:
-        mtx, dist, rvecs, tvecs = dataset
+        mtx, dist = dataset
 
         img = cv2.imread(sourcePath)
         h, w = img.shape[:2]
