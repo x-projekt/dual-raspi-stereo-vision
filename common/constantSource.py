@@ -15,6 +15,10 @@ camera = "CAMERA"
 stereo = "STEREO"
 root = "ROOT"
 
+# Error message prompts
+invalid_mode = "MODE"
+invalid_binary = "BINARY"
+
 def getImageSize():
     return (c.IMAGE_WIDTH, c.IMAGE_HEIGHT)
 
@@ -84,3 +88,17 @@ def getSensorSize():
 
 def getCalibReq():
     return c.TOTAL_NO_PICS
+
+def getMessage(type, AB=""):
+    msg = None
+    if type == invalid_mode:
+        msg = c.INVALID_MODE
+    elif type == invalid_binary:
+        l = len(AB)
+        if l == 2:
+            msg = c.INVALID_AB.format(X=AB[0], Y=AB[1])
+        else:
+            print("Invalid Input: AB should be a 2-character string.")
+    else:
+        print("Invalid message type requested.!")
+    return msg

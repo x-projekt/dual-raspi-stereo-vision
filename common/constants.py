@@ -30,3 +30,8 @@ CAMERA_CALIB_FILE = "_CamCalib.data"
 STEREO_CALIB_FILE = "SeteroCalib.data"
 
 TOTAL_NO_PICS = 30
+
+
+# Error messages:
+INVALID_MODE = "Invalid Mode:"
+INVALID_AB = "Invalid Input: The option are {X} and {Y}"
