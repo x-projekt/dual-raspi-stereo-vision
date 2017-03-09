@@ -20,7 +20,7 @@ while True:
             if camType == "L" or camType == "R":
                 break
             else:
-                print("Invalid Input: The camera options are R-right and L-left.!")
+                print(cs.getMessage(cs.invalid_binary, AB="LR"))
 
         checkerBoard = (9, 6)
         r = checkerBoard[0]
@@ -89,7 +89,7 @@ while True:
                 print("Canceling calibration parameters test...")
                 break
             else:
-                print("Invalid Input: valid inputs are 'y' and 'n' only.")
+                print(cs.getMessage(cs.invalid_binary, AB="YN"))
 
         while True:
             q = input("Would you like to calculate re-projection error? (y/n): ")
@@ -98,7 +98,8 @@ while True:
                 mean_error = 0
                 tot_error = 0
                 for i in range(len(objpoints)):
-                    imgpoints2 = cv2.projectPoints(objpoints[i], rvecs[i], tvecs[i], cameraMatrix, distCoeffs)[0]
+                    imgpoints2 = cv2.projectPoints(objpoints[i], rvecs[i],
+                                                   tvecs[i], cameraMatrix, distCoeffs)[0]
                     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2)/len(imgpoints2)
                     tot_error += error
 
@@ -108,7 +109,7 @@ while True:
                 print("Canceling error calculation...")
                 break
             else:
-                print("Invalid Input: valid inputs are 'y' and 'n' only.")
+                print(cs.getMessage(cs.invalid_binary, AB="YN"))
 
         while True:
             q = input("Would you like to store the calibration data? (y/n): ")
@@ -127,9 +128,12 @@ while True:
                       " entire calibration again.!")
                 q = input("Confirm cancellation? (y/n): ")
                 if q.lower() == 'y':
+                    print("Data not stored.!")
                     break
                 else:
                     pass
+            else:
+                print(cs.getMessage(cs.invalid_binary, AB="YN"))
 
         print("Process completed successfully...")
         break
@@ -137,4 +141,4 @@ while True:
         print("Canceling Caliberation...")
         break
     else:
-        print("Invalid Input: valid inputs are 'y' and 'n' only.")
+        print(cs.getMessage(cs.invalid_binary, AB="YN"))
