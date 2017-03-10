@@ -42,7 +42,6 @@ def takeRemotePic(path):
         # Sending capture mode information to server
         clientSocket.send(cs.single_capture.encode("utf-8"))
 
-        
         conn = clientSocket.makefile("rb")
         imgLen = struct.unpack("<L", conn.read(struct.calcsize("<L")))[0]
 
