@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
+# Custom module
+from common import constantSource as cs
 
 def drawlines(img1, img2, lines, pts1, pts2):
     ''' img1 - image on which we draw the epilines for the points in img2
@@ -18,9 +20,24 @@ def drawlines(img1, img2, lines, pts1, pts2):
         img2 = cv2.circle(img2, tuple(pt2), 5, color, -1)
     return (img1, img2)
 
-def runParallelEpipoleTest(): #TODO: Change the name of the function
-    img1 = cv2.imread('myleft.jpg',0)  #queryimage # left image
-    img2 = cv2.imread('myright.jpg',0) #trainimage # right image
+def verifyEpipolarLines(imageSource, mode=cs.path_mode):
+    """
+    This function verifies the epipolar lines for parallelness. And be
+    used for verifying the stereo calibraion data.
+
+    'imageSource' is a tuple of the form (image1, image2)
+    Path Mode: 'image#' refers to image path
+    Stream Mode: 'image#' refers to the output of cv2.imread(image_path)
+    """
+
+    if mode == cs.path_mode:
+        img1 = cv2.imread(imageSource[0], 0)
+        img2 = cv2.imread(imageSource[1], 0)
+    elif mode == cs.stream_mode:
+        img1 = imageSource[0]
+        img2 = imageSource[1]
+    else:
+        print(cs.getMessage(cs.invalid_mode))
 
     sift = cv2.SIFT()
 
@@ -30,7 +47,7 @@ def runParallelEpipoleTest(): #TODO: Change the name of the function
 
     # FLANN parameters
     FLANN_INDEX_KDTREE = 0
-    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
 
     flann = cv2.FlannBasedMatcher(index_params, search_params)
@@ -59,13 +76,13 @@ def runParallelEpipoleTest(): #TODO: Change the name of the function
     # drawing its lines on left image
     lines1 = cv2.computeCorrespondEpilines(pts2.reshape(-1, 1, 2), 2, F)
     lines1 = lines1.reshape(-1, 3)
-    img5,img6 = drawlines(img1, img2, lines1, pts1, pts2)
+    img5 = drawlines(img1, img2, lines1, pts1, pts2)[0]
 
     # Find epilines corresponding to points in left image (first image) and
     # drawing its lines on right image
     lines2 = cv2.computeCorrespondEpilines(pts1.reshape(-1, 1, 2), 1, F)
     lines2 = lines2.reshape(-1, 3)
-    img3, img4 = drawlines(img2, img1, lines2, pts2, pts1)
+    img3 = drawlines(img2, img1, lines2, pts2, pts1)[0]
 
     plt.subplot(121)
     plt.imshow(img5)
