@@ -18,6 +18,7 @@ root = "ROOT"
 # Error message prompts
 invalid_mode = "MODE"
 invalid_binary = "BINARY"
+invalid_entity = "ENTITY"
 
 def getImageSize():
     return (c.IMAGE_WIDTH, c.IMAGE_HEIGHT)
@@ -99,6 +100,17 @@ def getMessage(type, AB=""):
             msg = c.INVALID_AB.format(X=AB[0], Y=AB[1])
         else:
             print("Invalid Input: AB should be a 2-character string.")
+    elif type == invalid_entity:
+        msg = c.INVALID_ENTITY
     else:
         print("Invalid message type requested.!")
     return msg
+
+def getHostName(entity):
+    if entity == master_entity:
+        hostName = c.MASTER_HOST
+    elif entity == slave_entity:
+        hostName = c.SLAVE_HOST
+    else:
+        print(getMessage(invalid_entity))
+    return hostName
