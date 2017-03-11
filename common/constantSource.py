@@ -1,5 +1,7 @@
 import common.constants as c
 
+connTimeout = 15 # in sec
+
 # Entity types
 master_entity = "MASTER"
 slave_entity = "SLAVE"
@@ -8,7 +10,7 @@ slave_entity = "SLAVE"
 stream_mode = "STREAM"
 path_mode = "PATH"
 single_capture = "SINGLE"
-burst_capture = "BURST"
+rapid_capture = "BURST"
 
 # Calibration type
 camera = "CAMERA"
