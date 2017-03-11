@@ -34,8 +34,8 @@ while True:
         n = 1
         calibDir = cs.getCalibDataDir(cs.stereo)
         while n <= TOTAL_PICS:
-            path_L = calibDir + "L" + str(format(n, '04')) + ".jpg"
-            path_R = calibDir + "R" + str(format(n, '04')) + ".jpg"
+            path_L = calibDir + "L" + str(format(n, '04')) + ".png"
+            path_R = calibDir + "R" + str(format(n, '04')) + ".png"
             print("\n\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
             ct.takePic(path_L)
