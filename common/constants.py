@@ -31,7 +31,11 @@ STEREO_CALIB_FILE = "SeteroCalib.data"
 
 TOTAL_NO_PICS = 30
 
-
 # Error messages:
-INVALID_MODE = "Invalid Mode:"
+INVALID_MODE = "Invalid Mode: Values taken 'path_mode' or 'stream_mode'"
 INVALID_AB = "Invalid Input: The option are {X} and {Y}"
+INVALID_ENTITY = "Invalid Entity: Values taken 'master_entity' or 'slave_entity'"
+
+# Hostnames of systems
+MASTER_HOST = "raspberrypi3"
+SLAVE_HOST = "raspberrypi2"
