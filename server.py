@@ -3,6 +3,7 @@
 import socket
 import struct
 import io
+import time
 
 # Custom modules
 from common import constantSource as cs
@@ -35,11 +36,12 @@ def startServer():
                 conn.write(stream.read())
                 conn.write(struct.pack("<L", 0))
                 conn.close()
-            elif data == cs.burst_capture:
+            elif data == cs.rapid_capture:
+                # TODO: write code here for max framerate
                 pass
             else:
                 clientSocket.send("Invalid Capture Mode.!")
-                clientSocket.sendall("Closing Connection...")
+                clientSocket.send("Closing Connection...")
                 break
         except socket.error as e:
             print("Error encountered: " + e.errno)
