@@ -40,7 +40,7 @@ while True:
         n = 1
         calibDir = cs.getCalibDataDir(cs.camera)
         while n <= TOTAL_PICS:
-            path = calibDir + camType + str(format(n, '04')) + ".jpg"
+            path = calibDir + camType + str(format(n, '04')) + ".png"
             print("\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
             ct.takePic(path)
