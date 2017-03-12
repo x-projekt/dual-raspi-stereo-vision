@@ -61,7 +61,7 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
         currFrame = 6
         setPixelFrame(currFrame, go, True)
         stream = io.BytesIO()
-        ct.takeRemotePic(stream, cs.stream_mode)
+        ct.takeRemotePic(stream, cs.rapid_capture)
 
     except socket.timeout as error:
         if currFrame == 2:
