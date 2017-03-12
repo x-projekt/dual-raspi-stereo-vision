@@ -32,16 +32,16 @@ def takePic(path, mode=cs.path_mode):
     return
 
 # This should only be used from Master Pi
-def takeRemotePic(path, mode=cs.path_mode):
+def takeRemotePic(path, mode=cs.single_capture):
     ip = cs.getIP(cs.slave_entity)
     port = cs.getPort(cs.slave_entity)
     clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         clientSocket.connect((ip, port))
 
-        if mode == cs.path_mode:
+        if mode == cs.single_capture:
             # Sending capture mode information to server
-            clientSocket.send(cs.single_capture.encode("utf-8"))
+            clientSocket.send(mode.encode("utf-8"))
 
             conn = clientSocket.makefile("rb")
             imgLen = struct.unpack("<L", conn.read(struct.calcsize("<L")))[0]
@@ -51,9 +51,9 @@ def takeRemotePic(path, mode=cs.path_mode):
             f.write(conn.read(imgLen))
             f.close()
             conn.close()
-        elif mode == cs.stream_mode:
+        elif mode == cs.rapid_capture:
             # Sending capture mode information to server
-            clientSocket.send(cs.rapid_capture.encode("utf-8"))
+            clientSocket.send(mode.encode("utf-8"))
             # TODO: write code using picamera advanced recipes
 
     except socket.error as e:
