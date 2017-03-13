@@ -1,18 +1,15 @@
+# Optimized values for disparity map generation
+# These values are dependent on hardware used
+dispValues = None
+
 # Camera Constants
 FRAME_RATE = 30 # in fps
 IMAGE_RESOLUTION = (640, 480) # in pixels
-
-# FOV in degrees
-FOV_H = 62.2
-FOV_V = 48.8
-
-# Focal length (focal_length_in_mm, aperture)
-FOCAL_LENGTH = (3.04, 2.0)
-
-# Pixel size in um (10e-6 m)
-# Pixel count is of active pixels
-PIXEL_SIZE = (1.12, 1.12)
-PIXEL_COUNT = (3280, 2464)
+FOCAL_LENGTH = (3.04, 2.0) # in (focal_length_in_mm, aperture)
+FOV_H = 62.2 # in degrees
+FOV_V = 48.8 # in degrees
+PIXEL_SIZE = (1.12, 1.12) # Pixel size in um (10e-6 m)
+PIXEL_COUNT = (3280, 2464) # Pixel count is of active pixels
 
 # Path Constants
 MASTER_IP = "192.168.137.170"
