@@ -9,7 +9,7 @@ import cv2
 from common import constantSource as cs
 from common import miscellaneous as msc
 from common import cameraTrigger as ct
-import server
+from server import Server
 
 # Color codes
 err = [255, 0 ,0]
@@ -31,7 +31,7 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
     try:
         # Step 1: Starting application on the Master Pi
         currFrame = 1
-        setPixelFrame(1, go)
+        setPixelFrame(currFrame, go)
 
         # Step 2: Checking application status of Slave Pi
         currFrame = 2
@@ -40,6 +40,7 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
         clientSocket.connect((cs.getIP(cs.slave_entity),
                               cs.getPort(cs.slave_entity)))
         clientSocket.close()
+        setPixelFrame(currFrame, go)
 
         # Step 3, 4 and 5: Checking for calibration data
         currFrame = 3
@@ -62,12 +63,9 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
         setPixelFrame(currFrame, go, True)
         stream = io.BytesIO()
         ct.takeRemotePic(stream, cs.rapid_capture)
-
-    except socket.timeout as error:
+    except:
         if currFrame == 2:
             clientSocket.close()
-        # Add code to log the details
-    except:
         setPixelFrame(currFrame, err)
     finally:
         pass
@@ -75,7 +73,9 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
 elif socket.gethostname() == cs.getHostName(cs.slave_entity):
     # Starting main process
     print("Starting server...")
-    server.startServer()
+    host = ""
+    port = cs.getPort(cs.slave_entity)
+    Server(host, port).startServer()
 else:
     print("Invalid System being used.! The host name isn't registered.")
 
