@@ -1,6 +1,6 @@
 # Camera Constants
-IMAGE_WIDTH = 640
-IMAGE_HEIGHT = 480
+FRAME_RATE = 30 # in fps
+IMAGE_RESOLUTION = (640, 480) # in pixels
 
 # FOV in degrees
 FOV_H = 62.2

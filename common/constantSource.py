@@ -23,7 +23,10 @@ invalid_binary = "BINARY"
 invalid_entity = "ENTITY"
 
 def getImageSize():
-    return (c.IMAGE_WIDTH, c.IMAGE_HEIGHT)
+    return c.IMAGE_RESOLUTION
+
+def getFrameRate():
+    return c.FRAME_RATE
 
 # Returns a tuple of (height, width)
 # Dimension is um (10e-6 m)
