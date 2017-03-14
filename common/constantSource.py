@@ -22,6 +22,14 @@ invalid_mode = "MODE"
 invalid_binary = "BINARY"
 invalid_entity = "ENTITY"
 
+# Returns camera mapping (1, 2) --> (L, R)
+def getCamera(i):
+    if i == 1:
+        res = c.CAMERA_1
+    if i == 2:
+        res = c.CAMERA_2
+    return res
+
 def getImageSize():
     return c.IMAGE_RESOLUTION
 
