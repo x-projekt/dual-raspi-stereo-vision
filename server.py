@@ -5,6 +5,7 @@ import struct
 import io
 import numpy as np
 import logging as log
+import pickle as p
 
 # Custom modules
 from common import constantSource as cs
@@ -37,8 +38,9 @@ class Server:
             if data == cs.single_capture:
                 conn = clientSocket.makefile("wb")
                 #stream = io.BytesIO()
-                stream = np.empty(cs.getImageSize(), dtype=np.uint8)
-                ct.takePic(stream, cs.stream_mode)
+                data = np.empty(cs.getImageSize(), dtype=np.uint8)
+                ct.takePic(data, cs.stream_mode)
+                stream = p.dumps(data)
 
                 # Sending the image size
                 conn.write(struct.pack("<L", stream.tell()))
