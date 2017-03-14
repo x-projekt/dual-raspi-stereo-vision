@@ -11,11 +11,8 @@ from picamera import PiCamera
 # Custom moudles
 from common import constantSource as cs
 
-# setting height and width of picture (in pixels)
-w, h = cs.getImageSize()
-
 camera = PiCamera()
-camera.resolution = (w, h)
+camera.resolution = cs.getImageSize()
 
 def takePic(path, mode=cs.path_mode):
     if mode == cs.path_mode:
@@ -25,11 +22,7 @@ def takePic(path, mode=cs.path_mode):
         print("Trigger time: " + str(end-start))
     elif mode == cs.stream_mode:
         start = time.time()
-        # camera.capture(path, format="png")
-        camera.capture(path, "rgb")
-        # TODO: make it use ndarray and replace format with "rgb"
-        # OR
-        # TODO: find a way of converting BytesIO into ndarray (seems like overkill)
+        camera.capture(path, "bgr")
         end = time.time()
         print("Trigger time: " + str(end-start))
     else:
@@ -37,7 +30,7 @@ def takePic(path, mode=cs.path_mode):
     return
 
 # This should only be used from Master Pi
-def takeRemotePic(path, mode=cs.single_capture):
+def takeRemotePic(path=None, mode=cs.single_capture):
     ip = cs.getIP(cs.slave_entity)
     port = cs.getPort(cs.slave_entity)
     clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -48,15 +41,21 @@ def takeRemotePic(path, mode=cs.single_capture):
             # Sending capture mode information to server
             clientSocket.send(mode.encode("utf-8"))
 
-            conn = clientSocket.makefile("rb")
-            imgLen = struct.unpack("<L", conn.read(struct.calcsize("<L")))[0]
+            # Receiving image data from server
+            imgData = clientSocket.recv(4096)
+            while True:
+                buff = clientSocket.recv(4096)
+                if buff:
+                    imgData += buff
+                else:
+                    break
 
-            data = p.loads(conn.read(imgLen))
-            # Saving data to file
-            # f = open(path, "wb")
-            # f.write(conn.read(imgLen))
-            # f.close()
-            # conn.close()
+            if path is None:
+                data = p.loads(imgData)
+            else:
+                # Saving image data to file
+                cv2.imwrite(path, imgData)
+                data = None
         elif mode == cs.rapid_capture:
             # Sending capture mode information to server
             clientSocket.send(mode.encode("utf-8"))

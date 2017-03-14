@@ -38,18 +38,14 @@ class Server:
             if data == cs.single_capture:
                 conn = clientSocket.makefile("wb")
                 #stream = io.BytesIO()
-                data = np.empty(cs.getImageSize(), dtype=np.uint8)
+                size = cs.getImageSize()
+                data = np.empty((size[1], size[0], 3), dtype=np.uint8)
                 ct.takePic(data, cs.stream_mode)
                 stream = p.dumps(data)
 
-                # Sending the image size
-                conn.write(struct.pack("<L", stream.tell()))
-                conn.flush()
-                stream.seek(0)
-
                 # Sending the image data
-                conn.write(stream.read())
-                conn.write(struct.pack("<L", 0))
+                conn.write(stream)
+                conn.flush()
                 conn.close()
             elif data == cs.rapid_capture:
                 # TODO: write code here for max framerate
