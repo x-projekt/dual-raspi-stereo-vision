@@ -3,7 +3,7 @@
 import socket
 import struct
 import io
-import time
+import numpy as np
 import logging as log
 
 # Custom modules
@@ -36,7 +36,8 @@ class Server:
             data = clientSocket.recv(4096).decode("utf-8")
             if data == cs.single_capture:
                 conn = clientSocket.makefile("wb")
-                stream = io.BytesIO()
+                #stream = io.BytesIO()
+                stream = np.empty(cs.getImageSize(), dtype=np.uint8)
                 ct.takePic(stream, cs.stream_mode)
 
                 # Sending the image size
