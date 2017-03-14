@@ -25,9 +25,10 @@ def verifyEpipolarLines(imageSource, mode=cs.path_mode):
     This function verifies the epipolar lines for parallelness. And be
     used for verifying the stereo calibraion data.
 
-    'imageSource' is a tuple of the form (image1, image2)
-    Path Mode: 'image#' refers to image path
-    Stream Mode: 'image#' refers to the output of cv2.imread(image_path)
+    imageSource: Tuple of (image_1, image_2)
+                 These can either be path or ndarray depending on 'mode' (see below)
+    mode: Can be 'path_mode' or 'stream_mode'
+          Specify whether 'imageSource' is path or ndarray
     """
 
     if mode == cs.path_mode:
@@ -38,6 +39,7 @@ def verifyEpipolarLines(imageSource, mode=cs.path_mode):
         img2 = imageSource[1]
     else:
         print(cs.getMessage(cs.invalid_mode))
+        raise Exception()
 
     sift = cv2.SIFT()
 
