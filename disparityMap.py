@@ -6,8 +6,10 @@ from matplotlib import pyplot as plt
 from common import constantSource as cs
 
 def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False):
-    """ Use this function to generate disparity map
-    imageSource: Tuple of (left_image, right_image)
+    """
+    Returns the disparity map as ndarray
+
+    imageSource: Tuple of (image_1, image_2)
                  These can either be path or ndarray depending on 'mode' (see below)
     dispValues: Tuple of (max_disp_value, min_disp_value)
                 These values should be divisible by 16
@@ -16,13 +18,14 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
     show: Specifies whether to display the generated disparity map as image
     """
     if mode == cs.path_mode:
-        imgL = cv2.imread(imageSource[0])
-        imgR = cv2.imread(imageSource[1])
+        img1 = cv2.imread(imageSource[0], 0)
+        img2 = cv2.imread(imageSource[1], 0)
     elif mode == cs.stream_mode:
-        imgL = imageSource[0]
-        imgR = imageSource[1]
+        img1 = imageSource[0]
+        img2 = imageSource[1]
     else:
         print(cs.getMessage(cs.invalid_mode))
+        raise Exception()
 
     numDisp = dispValues[1] - dispValues[0]
     # if numDisp%16 != 0:
@@ -38,8 +41,8 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
                                    P1=p1, P2=p2, disp12MaxDiff=1, uniquenessRatio=10,
                                    speckleWindowSize=100, speckleRange=32)
 
-    disparity = stereo.compute(imgL, imgR)
+    disparity = stereo.compute(img1, img2)
     if show:
         plt.imshow(disparity, "gray")
         plt.show()
-    return
+    return disparity
