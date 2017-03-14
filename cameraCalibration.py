@@ -43,7 +43,10 @@ while True:
             path = calibDir + camType + str(format(n, '04')) + ".png"
             print("\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
-            ct.takePic(path)
+            if camType == "R":
+                ct.takeRemotePic(path)
+            else:
+                ct.takePic(path)
 
             img = cv2.imread(path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
