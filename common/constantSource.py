@@ -30,9 +30,11 @@ def getCamera(i):
         res = c.CAMERA_2
     return res
 
+# Returns tuple of image resolution (W, H) in pixels
 def getImageSize():
     return c.IMAGE_RESOLUTION
 
+# Returns the preffered frame rate (in fps)
 def getFrameRate():
     return c.FRAME_RATE
 
