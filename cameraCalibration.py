@@ -15,12 +15,12 @@ while True:
         print("Starting Camera Caliberation...")
         print(str(TOTAL_PICS) + " pictures are needed to configure the camera.\n")
         while True:
-            camType = input("Enter the camera that you want to caliberate (l/r): ")
-            camType = camType.upper()
-            if camType == "L" or camType == "R":
+            camType = input("Enter the camera that you want to caliberate (1/2): ")
+            if camType == 1 or camType == 2:
+                camType = cs.getCamera(camType)
                 break
             else:
-                print(cs.getMessage(cs.invalid_binary, AB="LR"))
+                print(cs.getMessage(cs.invalid_binary, AB="12"))
 
         checkerBoard = (9, 6)
         r = checkerBoard[0]
@@ -43,12 +43,15 @@ while True:
             path = calibDir + camType + str(format(n, '04')) + ".png"
             print("\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
+            # TODO: Decide whether to keep it or not
+            #       If you remove it also remove the camera
+            #       & pi mapping from constants.py
             if camType == "R":
                 ct.takeRemotePic(path)
             else:
                 ct.takePic(path)
 
-            img = cv2.imread(path)
+            img = cv2.imread(path, 0)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             # Find the chess board corners
@@ -85,8 +88,8 @@ while True:
                 source = calibDir + camType + "_skewedImage.png"
                 target = calibDir + camType + "_undistortImage.png"
                 ct.takePic(source)
-                cr.rectifyImage(dataSet, source, target)
-                cv2.imshow("Rectified Image", cv2.imread(target))
+                traget = cr.rectifyImage((dataSet[0], dataSet[1]), source, cs.stream_mode)
+                cv2.imshow("Rectified Image", target)
                 break
             elif q.lower() == 'n':
                 print("Canceling calibration parameters test...")
