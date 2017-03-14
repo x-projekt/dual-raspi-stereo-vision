@@ -1,6 +1,8 @@
 import socket
 from pathlib import Path
 import io
+from multiprocessing import Process
+
 from sense_hat import SenseHat
 import numpy as np
 import cv2
@@ -61,8 +63,23 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
         # Step 6: Starting system process
         currFrame = 6
         setPixelFrame(currFrame, go, True)
-        stream = io.BytesIO()
-        ct.takeRemotePic(stream, cs.rapid_capture)
+        i = 0
+        while True:
+            pathL = "__cahce__/imageL_{x}".format(i) + ".png"
+            pathR = "__cahce__/imageR_{x}".format(i) + ".png"
+            paths = [pathL, pathR]
+            procs = []
+            for index, path in enumerate(paths):
+                proc = Process(target=ct.takePic, args=(path))
+                procs.append(proc)
+                proc.start()
+
+            for proc in procs:
+                proc.join()
+
+            imgL = cv2.imread(pathL)
+            imgR = cv2.imread(pathR)
+            stereoRectify(images)
     except:
         if currFrame == 2:
             clientSocket.close()
