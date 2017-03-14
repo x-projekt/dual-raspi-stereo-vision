@@ -25,10 +25,13 @@ def takePic(path, mode=cs.path_mode):
     elif mode == cs.stream_mode:
         start = time.time()
         camera.capture(path, format="png")
+        # TODO: make it use ndarray and replace format with "rgb"
+        # OR
+        # TODO: find a way of converting BytesIO into ndarray (seems like overkill)
         end = time.time()
         print("Trigger time: " + str(end-start))
     else:
-        print("Invalid Mode: Mode can only be STREAM_MODE or PATH_MODE")
+        print(cs.getMessage(cs.invalid_mode))
     return
 
 # This should only be used from Master Pi
