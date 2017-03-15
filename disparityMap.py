@@ -11,7 +11,7 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
 
     imageSource: Tuple of (image_1, image_2)
                  These can either be path or ndarray depending on 'mode' (see below)
-    dispValues: Tuple of (max_disp_value, min_disp_value)
+    dispValues: Tuple of (min_disp_value, max_disp_value)
                 These values should be divisible by 16
     mode: Can be 'path_mode' or 'stream_mode'
           Specify whether 'imageSource' is path or ndarray
@@ -28,16 +28,17 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
         raise Exception()
 
     numDisp = dispValues[1] - dispValues[0]
-    # if numDisp%16 != 0:
-    #     print("Invalid Input: 'numDisparities' should be divisible by 16.")
-    # TODO: check if the above test is required
+    if numDisp%16 != 0:
+        print("Invalid Input: 'numDisparities' should be divisible by 16.")
+        raise Exception()
+
     # TODO: check speckleRange=32 or 2
 
     block = 10
     p1 = 8*3*3**2
     p2 = 4*p1
     stereo = cv2.StereoSGBM_create(minDisparity=dispValues[0],
-                                   numDisparity=numDisp, blockSize=block,
+                                   numDisparities=numDisp, blockSize=block,
                                    P1=p1, P2=p2, disp12MaxDiff=1, uniquenessRatio=10,
                                    speckleWindowSize=100, speckleRange=32)
 
