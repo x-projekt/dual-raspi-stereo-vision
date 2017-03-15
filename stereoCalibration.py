@@ -37,11 +37,9 @@ while True:
             path2 = calibDir + "R" + str(format(n, '04')) + ".png"
             print("\n\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
-            ct.takePic(path1)
-            ct.takeRemotePic(path2)
+            img1 = ct.takePic()
+            img2 = ct.takeRemotePic()
 
-            img1 = cv2.imread(path1, 0)
-            img2 = cv2.imread(path2, 0)
             gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
             gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
@@ -65,6 +63,8 @@ while True:
                 cv2.drawChessboardCorners(img2, (r, c), corners2, ret2)
                 cv2.imshow('img', img2)
                 cv2.waitKey(500)
+                cv2.imwrite(path1, img1)
+                cv2.imwrite(path2, img2)
                 n += 1
             else:
                 print("Images not useful.!! Use a different orientation/position.")

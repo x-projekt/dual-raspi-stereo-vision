@@ -47,11 +47,10 @@ while True:
             #       If you remove it also remove the camera
             #       & pi mapping from constants.py
             if camType == "R":
-                ct.takeRemotePic(path)
+                img = ct.takeRemotePic(path)
             else:
-                ct.takePic(path)
+                img = ct.takePic(path)
 
-            img = cv2.imread(path, 0)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             # Find the chess board corners
@@ -69,6 +68,7 @@ while True:
                 cv2.drawChessboardCorners(img, (r, c), corners, ret)
                 cv2.imshow('img', img)
                 cv2.waitKey(500)
+                cv2.imwrite(path, img)
                 n += 1
             else:
                 print("Image not useful.!! Use a different orientation/position.")
