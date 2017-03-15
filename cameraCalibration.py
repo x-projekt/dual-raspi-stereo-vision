@@ -76,7 +76,10 @@ while True:
 
         # Performing camera calibration
         ret, cameraMatrix, distCoeffs, rvecs, tvecs = cv2.calibrateCamera(objectPoints=objpoints,
-            imagePoints=imgpoints, imageSize=gray.shape[::-1], cameraMatrix=None, distCoeffs=None)
+                                                                          imagePoints=imgpoints,
+                                                                          imageSize=gray.shape[::-1],
+                                                                          cameraMatrix=None,
+                                                                          distCoeffs=None)
 
         # Final camera specific dataSet
         dataSet = (cameraMatrix, distCoeffs, rvecs, tvecs)
