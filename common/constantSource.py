@@ -38,6 +38,9 @@ def getImageSize():
 def getFrameRate():
     return c.FRAME_RATE
 
+def getDisparityValue():
+    return c.DISP_VALUES
+
 # Returns a tuple of (height, width)
 # Dimension is um (10e-6 m)
 def getPixelSize():

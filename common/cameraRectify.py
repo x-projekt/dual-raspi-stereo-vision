@@ -8,6 +8,7 @@ def rectifyImage(dataset, imageSource, mode=cs.path_mode):
     Returns rectified camera image as ndarray
 
     dataset: Tuple of (cameraMatrix, distortion_coefficients)
+    imageSource: This can either be path or ndarray depending on 'mode' (see below)
     mode: Can be 'path_mode' or 'stream_mode'
           Specify whether 'imageSource' is path or ndarray
     """
