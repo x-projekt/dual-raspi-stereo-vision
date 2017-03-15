@@ -11,6 +11,9 @@ import cv2
 from common import constantSource as cs
 from common import miscellaneous as msc
 from common import cameraTrigger as ct
+from common import cameraRectify as cr
+import stereoRectify as sr
+import disparityMap as dm
 from server import Server
 
 # Color codes
@@ -46,14 +49,14 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
 
         # Step 3, 4 and 5: Checking for calibration data
         currFrame = 3
-        filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera, prefix="L")
-        camCalibL = getFileData(filePath, currFrame)
-        cameraMatrix, distCoeffs = camCalibL[0], camCalibL[1]
+        filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera, prefix=cs.getCamera(1))
+        camCalib1 = getFileData(filePath, currFrame)
+        camMtx1, distCoeffs1 = camCalib1[0], camCalib1[1]
 
         currFrame = 4
-        filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera, prefix="R")
-        camCalibR = getFileData(filePath, currFrame)
-        cameraMatrix, distCoeffs = camCalibR[0], camCalibR[0]
+        filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera, prefix=cs.getCamera(2))
+        camCalib2 = getFileData(filePath, currFrame)
+        camMtx2, distCoeffs2 = camCalib2[0], camCalib2[1]
 
         currFrame = 5
         filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.stereo)
@@ -63,23 +66,23 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
         # Step 6: Starting system process
         currFrame = 6
         setPixelFrame(currFrame, go, True)
-        i = 0
-        while True:
-            pathL = "__cahce__/imageL_{x}".format(i) + ".png"
-            pathR = "__cahce__/imageR_{x}".format(i) + ".png"
-            paths = [pathL, pathR]
-            procs = []
-            for index, path in enumerate(paths):
-                proc = Process(target=ct.takePic, args=(path))
-                procs.append(proc)
-                proc.start()
+        # TODO: Multi-process these step
+        img1 = ct.takePic()
+        img2 = ct.takeRemotePic()
+        img1 = cr.rectifyImage((camMtx1, distCoeffs1), img1, cs.stream_mode)
+        img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
 
-            for proc in procs:
-                proc.join()
+        dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
+        imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
+        disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, False)
 
-            imgL = cv2.imread(pathL)
-            imgR = cv2.imread(pathR)
-            stereoRectify(images)
+        # Multi-process this step
+        ## TODO: Add code to send disparity to slave pi for point cloud generation
+        ## TODO: Add code for potential region selection
+        ## TODO: Add code to call the required control planning system
+        cv2.imshow("Disparity", disp)
+        cv2.waitKey()
+        cv2.destroyAllWindows()
     except:
         if currFrame == 2:
             clientSocket.close()
