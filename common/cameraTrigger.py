@@ -14,35 +14,33 @@ camera = PiCamera()
 size = cs.getImageSize()
 camera.resolution = size
 
-def takePic(path=None, mode=cs.path_mode):
+def takePic(path=None):
     """
     This function triggers image capture on the current pi and returns
-    the image as 'ndarray' or saves it to the specified path
+    the image as 'ndarray' or saves it to storage depending on the path
 
     path: Path to which image has to be saved (optional)
           Do not specify this to get an ndarray return value
     """
-    if mode == cs.path_mode:
+    if path is not None:
         start = time.time()
         camera.capture(path)
         end = time.time()
         print("Trigger time: " + str(end-start))
         data = None
-    elif mode == cs.stream_mode:
+    elif path is None:
         start = time.time()
         data = np.empty((size[1], size[0], 3), dtype=np.uint8)
         camera.capture(data, "bgr")
         end = time.time()
         print("Trigger time: " + str(end-start))
-    else:
-        print(cs.getMessage(cs.invalid_mode))
     return data
 
 # This should only be used from Master Pi
 def takeRemotePic(path=None):
     """
     This function triggers image capture on slave pi and returns the
-    image as 'ndarray' or saves it to specified path
+    image as 'ndarray' or saves it to storage depending on the path
 
     path: Path to which image has to be saved (optional)
           Do not specify this to get an ndarray return value

@@ -47,9 +47,9 @@ while True:
             #       If you remove it also remove the camera
             #       & pi mapping from constants.py
             if camType == "R":
-                img = ct.takeRemotePic(path)
+                img = ct.takeRemotePic()
             else:
-                img = ct.takePic(path)
+                img = ct.takePic()
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 

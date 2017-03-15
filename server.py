@@ -37,7 +37,7 @@ class Server:
             data = clientSocket.recv(4096).decode("utf-8")
             if data == cs.single_capture:
                 conn = clientSocket.makefile("wb")
-                data = ct.takePic(cs.stream_mode)
+                data = ct.takePic()
                 stream = p.dumps(data)
 
                 # Sending the image data
