@@ -40,11 +40,11 @@ slaac private
 # server, but it should not be run by default.
 nohook lookup-hostname
 
-#Editing starts here --------------------//
+#Edits start here --------------------//
+
 interface eth0
+static ip_address=192.168.120.10
+static routers=192.168.120.1
+static domain_name_servers=192.168.120.1
 
-static ip_address=192.168.137.10
-static routers=192.168.137.1
-static domain_name_servers=192.168.137.1
-
-#Editing ends here ---------------------//
+#Edits end here ---------------------//

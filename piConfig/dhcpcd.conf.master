@@ -40,11 +40,15 @@ slaac private
 # server, but it should not be run by default.
 nohook lookup-hostname
 
-#Edits start here------------------//
+#Edits start here ------------------//
+
+# Use different ip networks for Wi-Fi and Ethernet
+# This would allow you to SSH into master over Wi-Fi
+# while still being connected to slave over Ethernet
 
 interface eth0
-static ip_address=192.168.137.170
-static routers=192.168.137.1
-static domain_name_servers=192.168.137.1
+static ip_address=192.168.120.170
+static routers=192.168.120.1
+static domain_name_servers=192.168.120.1
 
 #Edits end here -------------------//
