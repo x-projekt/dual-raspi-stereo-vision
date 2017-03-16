@@ -33,8 +33,8 @@ while True:
         n = 1
         calibDir = cs.getCalibDataDir(cs.stereo)
         while n <= TOTAL_PICS:
-            path1 = calibDir + "L" + str(format(n, '04')) + ".png"
-            path2 = calibDir + "R" + str(format(n, '04')) + ".png"
+            path1 = calibDir + cs.getCamera(1) + str(format(n, '04')) + ".png"
+            path2 = calibDir + cs.getCamera(2) + str(format(n, '04')) + ".png"
             print("\n\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
             img1 = ct.takePic()
@@ -72,12 +72,12 @@ while True:
 
         # Loading camera calibration data
         print("Loading camera calibration data...")
-        fileName = cs.getFileName(cs.camera, prefix="L")
+        fileName = cs.getFileName(cs.camera, prefix=cs.getCamera(1))
         file = cs.getCalibDataDir(cs.root) + fileName
         dataSet = msc.readData(file)
         mtx1, dist1, rvecs, tvecs = dataSet
 
-        fileName = cs.getFileName(cs.camera, prefix="R")
+        fileName = cs.getFileName(cs.camera, prefix=cs.getCamera(2))
         file = cs.getCalibDataDir(cs.root) + fileName
         dataSet = msc.readData(file)
         mtx2, dist2, rvecs, tvecs = dataSet

@@ -4,7 +4,7 @@ CAMERA_2 = "R" # Connected to Slave Pi
 
 # Optimized values for disparity map generation
 # These values are dependent on hardware used
-DISP_VALUE = None
+DISP_VALUES = None
 
 # Camera Constants
 FRAME_RATE = 30 # in fps

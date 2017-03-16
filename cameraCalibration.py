@@ -46,7 +46,7 @@ while True:
             # TODO: Decide whether to keep it or not
             #       If you remove it also remove the camera
             #       & pi mapping from constants.py
-            if camType == "R":
+            if camType == cs.getCamera(2):
                 img = ct.takeRemotePic()
             else:
                 img = ct.takePic()
