@@ -13,6 +13,7 @@ from common import miscellaneous as msc
 from common import cameraTrigger as ct
 from common import cameraRectify as cr
 import stereoRectify as sr
+import verifyEpipole as ve
 import disparityMap as dm
 from server import Server
 
@@ -74,7 +75,12 @@ if socket.gethostname() == cs.getHostName(cs.master_entity):
 
         dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
         imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
-        disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, False)
+
+        # TODO: change this to user input
+        verify = True
+        if verify:
+            ve.verifyEpipolarLines(imgs, cs.stream_mode)
+        disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, True)
 
         # Multi-process this step
         ## TODO: Add code to send disparity to slave pi for point cloud generation
