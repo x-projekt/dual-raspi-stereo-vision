@@ -24,10 +24,13 @@ invalid_entity = "ENTITY"
 
 # Returns camera mapping (1, 2) --> (L, R)
 def getCamera(i):
+    i = int(i)
     if i == 1:
         res = c.CAMERA_1
     if i == 2:
         res = c.CAMERA_2
+    else:
+        res = None
     return res
 
 # Returns tuple of image resolution (W, H) in pixels
