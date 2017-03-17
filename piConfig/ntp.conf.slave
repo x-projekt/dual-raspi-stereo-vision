@@ -22,7 +22,7 @@ filegen clockstats file clockstats type day enable
 #server 1.debian.pool.ntp.org iburst
 #server 2.debian.pool.ntp.org iburst
 #server 3.debian.pool.ntp.org iburst
-server 192.168.137.170
+server 192.168.120.170
 
 # Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
 # details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
