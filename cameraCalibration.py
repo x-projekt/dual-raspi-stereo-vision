@@ -41,11 +41,11 @@ while True:
         calibDir = cs.getCalibDataDir(cs.camera)
         while n <= TOTAL_PICS:
             path = calibDir + camType + str(format(n, '04')) + ".png"
-            print("\n\nPicture No: " + str(n))
+            print("\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
-            # TODO: Decide whether to keep it or not
-            #       If you remove it also remove the camera
-            #       & pi mapping from constants.py
+
+            # If you remove it also remove the camera
+            # & pi mapping from constants.py
             if camType == cs.getCamera(2):
                 img = ct.takeRemotePic()
             else:
@@ -66,21 +66,20 @@ while True:
                 cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 imgpoints.append(corners)
 
-                # # Draw and display the corners
-                # cv2.drawChessboardCorners(img, (r, c), corners, ret)
-                # cv2.imshow('img', img)
-                # cv2.waitKey(500)
+                # Draw and display the corners
+                cv2.drawChessboardCorners(img, (r, c), corners, ret)
+                cv2.imshow('img', img)
+                cv2.waitKey(500)
                 n += 1
             else:
                 print("Image not useful.!! Use a different orientation/position.")
         cv2.destroyAllWindows()
 
         # Performing camera calibration
-        ret, cameraMatrix, distCoeffs, rvecs, tvecs = cv2.calibrateCamera(objectPoints=objpoints,
-                                                                          imagePoints=imgpoints,
-                                                                          imageSize=gray.shape[::-1],
-                                                                          cameraMatrix=None,
-                                                                          distCoeffs=None)
+        result = cv2.calibrateCamera(objectPoints=objpoints, imagePoints=imgpoints,
+                                     imageSize=gray.shape[::-1], cameraMatrix=None,
+                                     distCoeffs=None)
+        ret, cameraMatrix, distCoeffs, rvecs, tvecs = result
 
         # Final camera specific dataSet
         dataSet = (cameraMatrix, distCoeffs, rvecs, tvecs)
@@ -89,11 +88,17 @@ while True:
             q = input("Would you like to test the camera calibration " +
                       "parameters before proceeding? (y/n): ")
             if q.lower() == 'y':
+                srcImage = ct.takePic()
+                rectImage = cr.rectifyImage((dataSet[0], dataSet[1]), srcImage, cs.stream_mode)
+                cv2.imshow("Rectified Image", rectImage)
+                cv2.waitKey()
+                cv2.destroyAllWindows()
+
+                print("Saving rectified image...")
                 source = calibDir + camType + "_skewedImage.png"
                 target = calibDir + camType + "_undistortImage.png"
-                ct.takePic(source)
-                traget = cr.rectifyImage((dataSet[0], dataSet[1]), source, cs.stream_mode)
-                cv2.imshow("Rectified Image", target)
+                cv2.imwrite(source, srcImage)
+                cv2.imwrite(target, rectImage)
                 break
             elif q.lower() == 'n':
                 print("Canceling calibration parameters test...")
@@ -107,9 +112,9 @@ while True:
                 print("Starting error calculation...")
                 mean_error = 0
                 tot_error = 0
-                for i in range(len(objpoints)):
-                    imgpoints2 = cv2.projectPoints(objpoints[i], rvecs[i],
-                                                   tvecs[i], cameraMatrix, distCoeffs)[0]
+                for i, objpoint in enumerate(objpoints):
+                    imgpoints2 = cv2.projectPoints(objpoint, rvecs[i], tvecs[i],
+                                                   cameraMatrix, distCoeffs)[0]
                     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2)/len(imgpoints2)
                     tot_error += error
 

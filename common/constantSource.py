@@ -27,7 +27,7 @@ def getCamera(i):
     i = int(i)
     if i == 1:
         res = c.CAMERA_1
-    if i == 2:
+    elif i == 2:
         res = c.CAMERA_2
     else:
         res = None
