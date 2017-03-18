@@ -16,7 +16,7 @@ while True:
         print(str(TOTAL_PICS) + " pictures are needed to configure the camera.\n")
         while True:
             camType = input("Enter the camera that you want to caliberate (1/2): ")
-            if camType == 1 or camType == 2:
+            if camType == "1" or camType == "2":
                 camType = cs.getCamera(camType)
                 break
             else:
@@ -59,16 +59,17 @@ while True:
             # If found, add object points, image points (after refining them)
             if ret is True:
                 print("Good shoot...")
+                cv2.imwrite(path, img)
+
                 objpoints.append(objp)
 
                 cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 imgpoints.append(corners)
 
-                # Draw and display the corners
-                cv2.drawChessboardCorners(img, (r, c), corners, ret)
-                cv2.imshow('img', img)
-                cv2.waitKey(500)
-                cv2.imwrite(path, img)
+                # # Draw and display the corners
+                # cv2.drawChessboardCorners(img, (r, c), corners, ret)
+                # cv2.imshow('img', img)
+                # cv2.waitKey(500)
                 n += 1
             else:
                 print("Image not useful.!! Use a different orientation/position.")

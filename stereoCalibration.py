@@ -35,7 +35,7 @@ while True:
         while n <= TOTAL_PICS:
             path1 = calibDir + cs.getCamera(1) + str(format(n, '04')) + ".png"
             path2 = calibDir + cs.getCamera(2) + str(format(n, '04')) + ".png"
-            print("\n\n\nPicture No: " + str(n))
+            print("\n\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
             img1 = ct.takePic()
             img2 = ct.takeRemotePic()
@@ -50,6 +50,9 @@ while True:
             # If found, add object points, image points (after refining them)
             if ret1 is True and ret2 is True:
                 print("Good shoot...")
+                cv2.imwrite(path1, img1)
+                cv2.imwrite(path2, img2)
+
                 objpoints.append(objp)
 
                 cv2.cornerSubPix(gray1, corners1, (11, 11), (-1, -1), criteria)
@@ -57,14 +60,12 @@ while True:
                 cv2.cornerSubPix(gray2, corners1, (11, 11), (-1, -1), criteria)
                 imgpoints2.append(corners2)
 
-                # Draw and display the corners
-                cv2.drawChessboardCorners(img1, (r, c), corners1, ret1)
-                cv2.imshow('img', img1)
-                cv2.drawChessboardCorners(img2, (r, c), corners2, ret2)
-                cv2.imshow('img', img2)
-                cv2.waitKey(500)
-                cv2.imwrite(path1, img1)
-                cv2.imwrite(path2, img2)
+                # # Draw and display the corners
+                # cv2.drawChessboardCorners(img1, (r, c), corners1, ret1)
+                # cv2.imshow('img', img1)
+                # cv2.drawChessboardCorners(img2, (r, c), corners2, ret2)
+                # cv2.imshow('img', img2)
+                # cv2.waitKey(500)
                 n += 1
             else:
                 print("Images not useful.!! Use a different orientation/position.")
@@ -83,13 +84,14 @@ while True:
         mtx2, dist2, rvecs, tvecs = dataSet
 
         # Performing stereo calibration
-        ret, rotate, translate, essential, fundamental = cv2.stereoCalibrate(
-            objectPoints=objpoints, imagePoints1=imgpoints1, imagePoints2=imgpoints2,
-            cameraMatrix1=mtx1, distCoeffs1=dist1, cameraMatrix2=mtx2,
-            distCoeffs2=dist2, imageSize=gray1.shape[::-1], flags=cv2.CV_CALIB_FIX_INTRINSIC)
+        result = cv2.stereoCalibrate(objectPoints=objpoints, imagePoints1=imgpoints1,
+                                     imagePoints2=imgpoints2, cameraMatrix1=mtx1,
+                                     distCoeffs1=dist1, cameraMatrix2=mtx2,
+                                     distCoeffs2=dist2, imageSize=gray1.shape[::-1],
+                                     flags=cv2.CALIB_FIX_INTRINSIC)
 
         # Final stereo calibration dataset
-        dataSet = (rotate, translate, essential, fundamental)
+        dataSet = (result[5], result[6], result[7], result[8])
 
         while True:
             q = input("Would you like to store the calibration data? (y/n): ")

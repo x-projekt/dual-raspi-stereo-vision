@@ -16,8 +16,8 @@ PIXEL_SIZE = (1.12, 1.12) # Pixel size in um (10e-6 m)
 PIXEL_COUNT = (3280, 2464) # Pixel count is of active pixels
 
 # Path Constants
-MASTER_IP = "192.168.137.170"
-SLAVE_IP = "192.168.137.10"
+MASTER_IP = "192.168.120.170"
+SLAVE_IP = "192.168.120.10"
 MASTER_SERVER_PORT = 6060
 SLAVE_SERVER_PORT = 6061
 

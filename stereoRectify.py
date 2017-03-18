@@ -35,7 +35,7 @@ def stereoRectify(dataset, imageSource, mode=cs.path_mode):
     data = cv2.stereoRectify(cameraMatrix1=camMtx1, distCoeffs1=distCoeffs1,
                              cameraMatrix2=camMtx2, distCoeffs2=distCoeffs2,
                              imageSize=imgSize, R=rotation, T=translation,
-                             alpha=1, new_image_size=(0, 0))
+                             alpha=1, newImageSize=(0, 0))
     R1, R2, P1, P2, Q, validROI1, validROI2 = data
 
     # Performing rectification
