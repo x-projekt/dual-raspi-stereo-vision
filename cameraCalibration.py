@@ -23,15 +23,15 @@ while True:
                 print(cs.getMessage(cs.invalid_binary, AB="12"))
 
         checkerBoard = (9, 6)
-        r = checkerBoard[0]
-        c = checkerBoard[1]
+        squareSize = None # square edge length in cm
 
         # termination criteria
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
         # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
-        objp = np.zeros((r*c, 3), np.float32)
-        objp[:, :2] = np.mgrid[0:r, 0:c].T.reshape(-1, 2)
+        objp = np.zeros((np.product(checkerBoard), 3), np.float32)
+        objp[:, :2] = np.indices(checkerBoard).T.reshape(-1, 2)
+        # objp *= squareSize
 
         # Arrays to store object points and image points from all the images.
         objpoints = [] # 3d point in real world space
@@ -52,22 +52,24 @@ while True:
                 img = ct.takePic()
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            h, w = gray.shape[:2]
 
             # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (r, c), None)
+            ret, corners = cv2.findChessboardCorners(gray, checkerBoard, None)
 
             # If found, add object points, image points (after refining them)
             if ret is True:
                 print("Good shoot...")
                 cv2.imwrite(path, img)
 
+                cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), criteria)
+                # TODO: think about (11, 11) ## changed to (5, 5)
+                imgpoints.append(corners.reshape(-1, 2))
+                # TODO: something to do with reashping corners ## Changed to .reshape(-1 ,2)
                 objpoints.append(objp)
 
-                cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-                imgpoints.append(corners)
-
                 # Draw and display the corners
-                cv2.drawChessboardCorners(img, (r, c), corners, ret)
+                cv2.drawChessboardCorners(img, checkerBoard, corners, ret)
                 cv2.imshow('img', img)
                 cv2.waitKey(500)
                 n += 1
@@ -77,8 +79,9 @@ while True:
 
         # Performing camera calibration
         result = cv2.calibrateCamera(objectPoints=objpoints, imagePoints=imgpoints,
-                                     imageSize=gray.shape[::-1], cameraMatrix=None,
+                                     imageSize=(w, h), cameraMatrix=None,
                                      distCoeffs=None)
+        # TODO: gray.shape[::-1] ## changed to (w, h)
         ret, cameraMatrix, distCoeffs, rvecs, tvecs = result
 
         # Final camera specific dataSet
