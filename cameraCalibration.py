@@ -68,7 +68,7 @@ while True:
 
                 # Draw and display the corners
                 cv2.drawChessboardCorners(img, checkerBoard, corners, ret)
-                cv2.imshow('img', img)
+                cv2.imshow('Image', img)
                 cv2.waitKey(500)
                 n += 1
             else:
@@ -88,7 +88,10 @@ while True:
             q = input("Would you like to test the camera calibration " +
                       "parameters before proceeding? (y/n): ")
             if q.lower() == 'y':
-                srcImage = ct.takePic()
+                if camType == cs.getCamera(1):
+                    srcImage = ct.takePic()
+                else:
+                    srcImage = ct.takeRemotePic()
                 rectImage = cr.rectifyImage((dataSet[0], dataSet[1]), srcImage, cs.stream_mode)
                 cv2.imshow("Rectified Image", rectImage)
                 cv2.waitKey()
