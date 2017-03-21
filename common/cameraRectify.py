@@ -25,7 +25,6 @@ def rectifyImage(dataset, imageSource, mode=cs.path_mode):
     h, w = img.shape[:2]
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
     mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w, h), 5)
-    # TODO: think about undistort()
     dst = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR)
     x, y, w, h = roi
     dst = dst[y:y+h, x:x+w]

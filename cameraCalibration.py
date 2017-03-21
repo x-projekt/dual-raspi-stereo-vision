@@ -63,9 +63,7 @@ while True:
                 cv2.imwrite(path, img)
 
                 cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), criteria)
-                # TODO: think about (11, 11) ## changed to (5, 5)
                 imgpoints.append(corners.reshape(-1, 2))
-                # TODO: something to do with reashping corners ## Changed to .reshape(-1 ,2)
                 objpoints.append(objp)
 
                 # Draw and display the corners
@@ -81,7 +79,6 @@ while True:
         result = cv2.calibrateCamera(objectPoints=objpoints, imagePoints=imgpoints,
                                      imageSize=(w, h), cameraMatrix=None,
                                      distCoeffs=None)
-        # TODO: gray.shape[::-1] ## changed to (w, h)
         ret, cameraMatrix, distCoeffs, rvecs, tvecs = result
 
         # Final camera specific dataSet
@@ -121,7 +118,8 @@ while True:
                     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2)/len(imgpoints2)
                     tot_error += error
 
-                print("Total Error: ", mean_error/len(objpoints))
+                print("Total Error: {total}\nMean Error: {mean}".\
+                      format(total=tot_error, mean=tot_error/len(objpoints)))
                 break
             elif q.lower() == 'n':
                 print("Canceling error calculation...")
