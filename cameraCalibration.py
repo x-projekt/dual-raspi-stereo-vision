@@ -115,6 +115,7 @@ while True:
                 for i, objpoint in enumerate(objpoints):
                     imgpoints2 = cv2.projectPoints(objpoint, rvecs[i], tvecs[i],
                                                    cameraMatrix, distCoeffs)[0]
+                    # TODO: Problem caused due to differnece in sizes of imgpoints2 and imgpoints
                     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2)/len(imgpoints2)
                     tot_error += error
 
