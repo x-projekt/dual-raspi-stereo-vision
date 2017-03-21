@@ -32,10 +32,11 @@ def stereoRectify(dataset, imageSource, mode=cs.path_mode):
 
     # Calculating rectification parameters
     ## Change the alpha to 0, will remove useless areas (black pixels)
+    ## Change the alpha to 1, will keep the useless areas (black pixels)
     data = cv2.stereoRectify(cameraMatrix1=camMtx1, distCoeffs1=distCoeffs1,
                              cameraMatrix2=camMtx2, distCoeffs2=distCoeffs2,
                              imageSize=imgSize, R=rotation, T=translation,
-                             alpha=1, newImageSize=(0, 0))
+                             alpha=0, newImageSize=(0, 0))
     R1, R2, P1, P2, Q, validROI1, validROI2 = data
 
     # Performing rectification
