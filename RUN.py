@@ -1,7 +1,6 @@
 import socket
 from pathlib import Path
-import io
-from multiprocessing import Process
+import time
 
 from sense_hat import SenseHat
 import numpy as np
@@ -105,11 +104,10 @@ elif socket.gethostname() == cs.getHostName(cs.slave_entity):
 else:
     print("Invalid System being used.! The host name isn't registered.")
 
-# only call this method from Master System
 def setPixelFrame(frameNo, color, blink=False):
     """
+    Only call this method from Master System.
     The frames are organised as follows:
-
     """
     if frameNo%2 == 0:
         j = frameNo + 30
@@ -121,7 +119,7 @@ def setPixelFrame(frameNo, color, blink=False):
         mainPixelMatrix[j] = color
         mainPixelMatrix[j+k] = color
         j += MATRIX_SIZE
-
+    time.sleep(2)
     sense.set_pixels(mainPixelMatrix)
     return
 
@@ -132,3 +130,7 @@ def getFileData(filePath, frameNo):
     else:
         raise Exception()
     return data
+
+if __name__ == "__main__":
+    print("Starting application...")
+    #proc = mainTool().run()
