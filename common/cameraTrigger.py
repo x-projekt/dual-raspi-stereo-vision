@@ -62,12 +62,10 @@ def takeRemotePic(path=None):
                 imgData += buff
             else:
                 break
-
-        if path is None:
-            data = p.loads(imgData)
-        else:
+        data = p.loads(imgData)
+        if path is not None:
             # Saving image data to file
-            cv2.imwrite(path, imgData)
+            cv2.imwrite(path, data)
             data = None
     except socket.error as e:
         print("Error occured: " + e.errno)
