@@ -93,4 +93,4 @@ ENV/
 *.jpg
 *.png
 dmin.txt
-.data
+*.data
