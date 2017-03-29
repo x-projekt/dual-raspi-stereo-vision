@@ -51,7 +51,7 @@ class Server:
                 log.error("Invalid Mode: '" + data + "': Closing Connection...")
                 raise Exception()
         except socket.error as err:
-            log.error("Error encountered: " + err.errno)
+            log.error("Error encountered: " + str(err.errno))
         except:
             log.error("Error encountered: ")
         finally:

@@ -6,13 +6,7 @@ import numpy as np
 # Custom modules
 import cv2
 from picamera import PiCamera
-
-# Custom moudles
 from common import constantSource as cs
-
-camera = PiCamera()
-size = cs.getImageSize()
-camera.resolution = size
 
 def takePic(path=None):
     """
@@ -22,6 +16,10 @@ def takePic(path=None):
     path: Path to which image has to be saved (optional)
           Do not specify this to get an ndarray return value
     """
+    camera = PiCamera()
+    size = cs.getImageSize()
+    camera.resolution = size
+
     if path is not None:
         start = time.time()
         camera.capture(path)
@@ -68,7 +66,7 @@ def takeRemotePic(path=None):
             cv2.imwrite(path, data)
             data = None
     except socket.error as e:
-        print("Error occured: " + e.errno)
+        print("Error occured: " + str(e.errno))
     finally:
         clientSocket.close()
     return data
