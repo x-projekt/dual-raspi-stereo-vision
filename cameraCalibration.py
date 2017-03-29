@@ -44,8 +44,8 @@ while True:
             print("\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
 
-            # If you remove it also remove the camera
-            # & pi mapping from constants.py
+            # If you remove it also remove the camera number
+            # & pi label mapping from constants.py
             if camType == cs.getCamera(2):
                 img = ct.takeRemotePic()
             else:
