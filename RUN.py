@@ -32,7 +32,7 @@ class mainProgram():
         if socket.gethostname() == cs.getHostName(cs.master_entity):
             # Starting the main process
             print("Starting appliction...")
-
+            self.sense = SenseHat()
             self.sense.set_pixels(self.mainPixelMatrix)
 
             try:
