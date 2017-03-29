@@ -16,125 +16,127 @@ import verifyEpipole as ve
 import disparityMap as dm
 from server import Server
 
-sense = SenseHat()
-# Color codes
-err = [255, 0 ,0]
-go = [0, 255, 0]
-wait = [0, 0, 255]
+class mainProgram():
+    def __init__(self):
+        self.sense = None
 
-MATRIX_SIZE = 8
-mainPixelMatrix = [wait for i in range(MATRIX_SIZE**2)]
+        # Color codes
+        self.err = [255, 0, 0]
+        self.go_green = [0, 255, 0]
+        self.wait = [0, 0, 255]
 
-currFrame = 0
+        self.MATRIX_SIZE = 8
+        self.mainPixelMatrix = [self.wait for i in range(self.MATRIX_SIZE**2)]
 
-def run():
-    if socket.gethostname() == cs.getHostName(cs.master_entity):
-        # Starting the main process
-        print("Starting appliction...")
+    def run(self):
+        if socket.gethostname() == cs.getHostName(cs.master_entity):
+            # Starting the main process
+            print("Starting appliction...")
 
-        sense.set_pixels(mainPixelMatrix)
+            self.sense.set_pixels(self.mainPixelMatrix)
 
-        try:
-            # Step 1: Starting application on the Master Pi
-            currFrame = 1
-            setPixelFrame(currFrame, go)
+            try:
+                # Step 1: Starting application on the Master Pi
+                currFrame = 1
+                self.setPixelFrame(currFrame, self.go_green)
 
-            # Step 2: Checking application status of Slave Pi
-            currFrame = 2
-            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            clientSocket.settimeout(cs.connTimeout)
-            clientSocket.connect((cs.getIP(cs.slave_entity),
-                                  cs.getPort(cs.slave_entity)))
-            clientSocket.close()
-            setPixelFrame(currFrame, go)
-
-            # Step 3, 4 and 5: Checking for calibration data
-            currFrame = 3
-            filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera,
-                                                                    prefix=cs.getCamera(1))
-            camCalib1 = getFileData(filePath, currFrame)
-            camMtx1, distCoeffs1 = camCalib1[0], camCalib1[1]
-
-            currFrame = 4
-            filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera,
-                                                                    prefix=cs.getCamera(2))
-            camCalib2 = getFileData(filePath, currFrame)
-            camMtx2, distCoeffs2 = camCalib2[0], camCalib2[1]
-
-            currFrame = 5
-            filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.stereo)
-            rotate, translate, essential, fundamental = getFileData(filePath, currFrame)
-
-            # TODO: Run this on parallel threads
-            # Step 6: Starting system process
-            currFrame = 6
-            setPixelFrame(currFrame, go, True)
-            # TODO: Multi-process these step
-            img1 = ct.takePic()
-            img2 = ct.takeRemotePic()
-            img1 = cr.rectifyImage((camMtx1, distCoeffs1), img1, cs.stream_mode)
-            img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
-
-            dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
-            imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
-
-            # TODO: change this to user input
-            verify = True
-            if verify:
-                ve.verifyEpipolarLines(imgs, cs.stream_mode)
-            disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, True)
-
-            # Multi-process this step
-            ## TODO: Add code to send disparity to slave pi for point cloud generation
-            ## TODO: Add code for potential region selection
-            ## TODO: Add code to call the required control planning system
-            cv2.imshow("Disparity", disp)
-            cv2.waitKey()
-            cv2.destroyAllWindows()
-        except:
-            if currFrame == 2:
+                # Step 2: Checking application status of Slave Pi
+                currFrame = 2
+                clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                clientSocket.settimeout(cs.connTimeout)
+                clientSocket.connect((cs.getIP(cs.slave_entity),
+                                      cs.getPort(cs.slave_entity)))
                 clientSocket.close()
-            setPixelFrame(currFrame, err)
-        finally:
-            pass
+                self.setPixelFrame(currFrame, self.go_green)
 
-    elif socket.gethostname() == cs.getHostName(cs.slave_entity):
-        # Starting main process
-        print("Starting server...")
-        host = ""
-        port = cs.getPort(cs.slave_entity)
-        Server(host, port).startServer()
-    else:
-        print("Invalid System being used.! The host name isn't registered.")
+                # Step 3, 4 and 5: Checking for calibration data
+                currFrame = 3
+                filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera,
+                                                                        prefix=cs.getCamera(1))
+                camCalib1 = self.getFileData(filePath, currFrame)
+                camMtx1, distCoeffs1 = camCalib1[0], camCalib1[1]
 
-def setPixelFrame(frameNo, color, blink=False):
-    """
-    Only call this method from Master System.
-    The frames are organised as follows:
-    """
-    if frameNo%2 == 0:
-        j = frameNo + 30
-        k = 1
-    else:
-        j = frameNo
-        k = -1
-    for i in range(4):
-        mainPixelMatrix[j] = color
-        mainPixelMatrix[j+k] = color
-        j += MATRIX_SIZE
-    time.sleep(2)
-    sense.set_pixels(mainPixelMatrix)
-    return
+                currFrame = 4
+                filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.camera,
+                                                                        prefix=cs.getCamera(2))
+                camCalib2 = self.getFileData(filePath, currFrame)
+                camMtx2, distCoeffs2 = camCalib2[0], camCalib2[1]
 
-def getFileData(filePath, frameNo):
-    if Path(filePath).is_file():
-        setPixelFrame(frameNo, go)
-        data = msc.readData(filePath)
-    else:
-        raise Exception()
-    return data
+                currFrame = 5
+                filePath = cs.getCalibDataDir(cs.root) + cs.getFileName(cs.stereo)
+                rotate, translate, essential, fundamental = self.getFileData(filePath,
+                                                                             currFrame)
+
+                # TODO: Run this on parallel threads
+                # Step 6: Starting system process
+                currFrame = 6
+                self.setPixelFrame(currFrame, self.go_green, True)
+                # TODO: Multi-process these step
+                img1 = ct.takePic()
+                img2 = ct.takeRemotePic()
+                img1 = cr.rectifyImage((camMtx1, distCoeffs1), img1, cs.stream_mode)
+                img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
+
+                dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
+                imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
+
+                # TODO: change this to user input
+                verify = True
+                if verify:
+                    ve.verifyEpipolarLines(imgs, cs.stream_mode)
+                disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, True)
+
+                # Multi-process this step
+                ## TODO: Add code to send disparity to slave pi for point cloud generation
+                ## TODO: Add code for potential region selection
+                ## TODO: Add code to call the required control planning system
+                cv2.imshow("Disparity", disp)
+                cv2.waitKey()
+                cv2.destroyAllWindows()
+            except:
+                if currFrame == 2:
+                    clientSocket.close()
+                self.setPixelFrame(currFrame, self.err)
+            finally:
+                pass
+
+        elif socket.gethostname() == cs.getHostName(cs.slave_entity):
+            # Starting main process
+            print("Starting server...")
+            host = ""
+            port = cs.getPort(cs.slave_entity)
+            Server(host, port).startServer()
+        else:
+            print("Invalid System being used.! The host name isn't registered.")
+
+    def setPixelFrame(self, frameNo, color, blink=False):
+        """
+        Only call this method from Master System.
+        The frames are organised as follows:
+        """
+        if frameNo%2 == 0:
+            j = frameNo + 30
+            k = 1
+        else:
+            j = frameNo
+            k = -1
+        for i in range(4):
+            self.mainPixelMatrix[j] = color
+            self.mainPixelMatrix[j+k] = color
+            j += self.MATRIX_SIZE
+        time.sleep(2)
+        self.sense.set_pixels(self.mainPixelMatrix)
+        return
+
+    def getFileData(self, filePath, frameNo):
+        if Path(filePath).is_file():
+            self.setPixelFrame(frameNo, self.go_green)
+            data = msc.readData(filePath)
+        else:
+            raise Exception()
+        return data
 
 if __name__ == "__main__":
     print("Starting application...")
-    #proc = mainTool().run()
-    run()
+    # TODO: implement queue and multiprocessing for this piece of code for multiple caputres
+    mainProgram().run()
