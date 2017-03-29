@@ -8,6 +8,10 @@ import cv2
 from picamera import PiCamera
 from common import constantSource as cs
 
+camera = PiCamera()
+size = cs.getImageSize()
+camera.resolution = size
+
 def takePic(path=None):
     """
     This function triggers image capture on the current pi and returns
@@ -16,9 +20,9 @@ def takePic(path=None):
     path: Path to which image has to be saved (optional)
           Do not specify this to get an ndarray return value
     """
-    camera = PiCamera()
-    size = cs.getImageSize()
-    camera.resolution = size
+    # camera = PiCamera()
+    # size = cs.getImageSize()
+    # camera.resolution = size
 
     if path is not None:
         start = time.time()
