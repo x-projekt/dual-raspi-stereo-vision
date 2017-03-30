@@ -24,6 +24,7 @@ def write_ply(fn, verts, colors):
 def generatePointCloud(disp, imgs, data, matFile=None):
     min_disp, num_disp = data
     imgL = imgs[0]
+
     print('generating 3d point cloud...',)
     h, w = imgL.shape[:2]
     f = 0.8*w # guess for focal length
