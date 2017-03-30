@@ -28,7 +28,8 @@ def stereoRectify(dataset, imageSource, mode=cs.path_mode):
         raise Exception()
 
     camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotation, translation, = dataset
-    imgSize = img1.shape[:2]
+    h, w = img1.shape[:2]
+    imgSize = (w, h)
 
     # Calculating rectification parameters
     ## Change the alpha to 0, will remove useless areas (black pixels)
