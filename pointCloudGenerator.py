@@ -46,28 +46,28 @@ def generatePointCloud(disp, imgs):
     cv2.waitKey()
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    print('loading images...')
-    imgL = cv2.pyrDown( cv2.imread('../data/aloeL.jpg') )  # downscale images for faster processing
-    imgR = cv2.pyrDown( cv2.imread('../data/aloeR.jpg') )
+# if __name__ == '__main__':
+#     print('loading images...')
+#     imgL = cv2.pyrDown( cv2.imread('../data/aloeL.jpg') )  # downscale images for faster processing
+#     imgR = cv2.pyrDown( cv2.imread('../data/aloeR.jpg') )
 
-    # disparity range is tuned for 'aloe' image pair
-    window_size = 3
-    min_disp = 16
-    num_disp = 112-min_disp
-    stereo = cv2.StereoSGBM_create(minDisparity = min_disp,
-        numDisparities = num_disp,
-        blockSize = 16,
-        P1 = 8*3*window_size**2,
-        P2 = 32*3*window_size**2,
-        disp12MaxDiff = 1,
-        uniquenessRatio = 10,
-        speckleWindowSize = 100,
-        speckleRange = 32
-    )
+#     # disparity range is tuned for 'aloe' image pair
+#     window_size = 3
+#     min_disp = 16
+#     num_disp = 112-min_disp
+#     stereo = cv2.StereoSGBM_create(minDisparity = min_disp,
+#         numDisparities = num_disp,
+#         blockSize = 16,
+#         P1 = 8*3*window_size**2,
+#         P2 = 32*3*window_size**2,
+#         disp12MaxDiff = 1,
+#         uniquenessRatio = 10,
+#         speckleWindowSize = 100,
+#         speckleRange = 32
+#     )
 
-    print('computing disparity...')
-    disp = stereo.compute(imgL, imgR).astype(np.float32) / 16.0
+#     print('computing disparity...')
+#     disp = stereo.compute(imgL, imgR).astype(np.float32) / 16.0
 
     # print('generating 3d point cloud...',)
     # h, w = imgL.shape[:2]
