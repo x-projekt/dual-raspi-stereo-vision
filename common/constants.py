@@ -1,6 +1,7 @@
 ## This is basic hardware configuration
 CAMERA_1 = "L" # Connected to Master Pi
 CAMERA_2 = "R" # Connected to Slave Pi
+BASELINE = 150 # in mm
 
 # Optimized values for disparity map generation
 # These values are dependent on hardware used

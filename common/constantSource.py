@@ -22,6 +22,10 @@ invalid_mode = "MODE"
 invalid_binary = "BINARY"
 invalid_entity = "ENTITY"
 
+# Returns baseline distance between the cameras (in mm)
+def getBaseline():
+    return c.BASELINE
+
 # Returns camera mapping (1, 2) --> (L, R)
 def getCamera(i):
     i = int(i)
