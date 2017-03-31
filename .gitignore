@@ -94,3 +94,4 @@ ENV/
 *.png
 dmin.txt
 *.data
+*.ply
