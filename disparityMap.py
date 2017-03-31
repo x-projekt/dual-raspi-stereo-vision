@@ -11,8 +11,6 @@ def generateDisparityMap(imageSource, mode=cs.path_mode, show=False):
 
     imageSource: Tuple of (image_1, image_2)
                  These can either be path or ndarray depending on 'mode' (see below)
-    dispValues: Tuple of (min_disp_value, max_disp_value)
-                These values should be divisible by 16
     mode: Can be 'path_mode' or 'stream_mode'
           Specify whether 'imageSource' is path or ndarray
     show: Specifies whether to display the generated disparity map as image
