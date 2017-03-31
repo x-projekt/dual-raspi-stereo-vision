@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import cv2
 
@@ -12,6 +13,11 @@ TOTAL_PICS = cs.getCalibReq()
 while True:
     q = input("Do you want to perform camera caliberation? (y/n): ")
     if q.lower() == 'y':
+        calibDir = cs.getCalibDataDir(cs.camera)
+        if not os.path.exists(calibDir):
+            print("Directory doesn't exist. Creating directory...")
+            os.makedirs(calibDir)
+
         print("Starting Camera Caliberation...")
         print(str(TOTAL_PICS) + " pictures are needed to configure the camera.\n")
         while True:
@@ -38,7 +44,6 @@ while True:
         imgpoints = [] # 2d points in image plane.
 
         n = 1
-        calibDir = cs.getCalibDataDir(cs.camera)
         while n <= TOTAL_PICS:
             path = calibDir + camType + str(format(n, '04')) + ".png"
             print("\nPicture No: " + str(n))

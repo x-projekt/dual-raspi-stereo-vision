@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import cv2
 
@@ -12,6 +13,11 @@ TOTAL_PICS = cs.getCalibReq()
 while True:
     q = input("Do you want to perform stereo caliberation? (y/n): ")
     if q.lower() == 'y':
+        calibDir = cs.getCalibDataDir(cs.stereo)
+        if not os.path.exists(calibDir):
+            print("Directory doesn't exist. Creating directory...")
+            os.makedirs(calibDir)
+
         print("Starting Stereo Caliberation...")
         print(str(TOTAL_PICS) + " pictures are needed to configure the stereo.\n")
 
@@ -31,7 +37,6 @@ while True:
         imgpoints2 = [] # 2d points in right camera image plane.
 
         n = 1
-        calibDir = cs.getCalibDataDir(cs.stereo)
         while n <= TOTAL_PICS:
             path1 = calibDir + cs.getCamera(1) + str(format(n, '04')) + ".png"
             path2 = calibDir + cs.getCamera(2) + str(format(n, '04')) + ".png"
