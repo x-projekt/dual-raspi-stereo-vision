@@ -1,3 +1,7 @@
+""" From the root directory run the following command:
+    '$> python3 -m test.imgSeqCapture'
+"""
+
 import numpy as np
 import cv2
 
