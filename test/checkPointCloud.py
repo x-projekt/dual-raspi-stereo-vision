@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 
 import pointCloudGenerator as pcg
+import zoneScanner as zs
 
 ply_header = '''ply
 format ascii 1.0
@@ -45,4 +46,5 @@ if __name__ == '__main__':
 
     print('computing disparity...')
     disp = stereo.compute(imgL, imgR).astype(np.float32)/16.0
-    pcg.generatePointCloud(disp, (imgL, imgR), (min_disp, num_disp))
+    #pcg.generatePointCloud(disp, (imgL, imgR), (min_disp, num_disp))
+    zs.startScan(disp)
