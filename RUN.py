@@ -70,31 +70,37 @@ class mainProgram():
                 # TODO: Run this on parallel threads
                 # Step 6: Starting system process
                 currFrame = 6
-                self.setPixelFrame(currFrame, self.go_green, True)
+                self.setPixelFrame(currFrame, self.go_green)
                 # TODO: Multi-process these step
-                img1 = ct.takePic()
-                img2 = ct.takeRemotePic()
-                img1 = cr.rectifyImage((camMtx1, distCoeffs1), img1, cs.stream_mode)
-                img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
+                q = True
+                while q:
+                    img1 = ct.takePic()
+                    img2 = ct.takeRemotePic()
+                    img1 = cr.rectifyImage((camMtx1, distCoeffs1), img1, cs.stream_mode)
+                    img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
 
-                dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
-                imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
+                    dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
+                    imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
 
-                disp = dm.generateDisparityMap(imgs, cs.stream_mode, True)
+                    disp = dm.generateDisparityMap(imgs, cs.stream_mode, True)
 
+                    q = input("Try one more time (y/n): ")
+                    if q.lower() == "y":
+                        q = True
+                    elif q.lower() == "n":
+                        q = False
+                    else:
+                        print(cs.getMessage(cs.invalid_binary, "YN"))
                 # Multi-process this step
                 ## TODO: Add code to send disparity to slave pi for point cloud generation
                 ## TODO: Add code for potential region selection
                 ## TODO: Add code to call the required control planning system
-                # cv2.imshow("Disparity", disp)
-                # cv2.waitKey()
-                # cv2.destroyAllWindows()
             except:
                 if currFrame == 2:
                     clientSocket.close()
                 self.setPixelFrame(currFrame, self.err)
             finally:
-                pass
+                self.sense.clear()
 
         elif socket.gethostname() == cs.getHostName(cs.slave_entity):
             # Starting main process
@@ -105,7 +111,7 @@ class mainProgram():
         else:
             print("Invalid System being used.! The host name isn't registered.")
 
-    def setPixelFrame(self, frameNo, color, blink=False):
+    def setPixelFrame(self, frameNo, color):
         """
         Only call this method from Master System.
         The frames are organised as follows:
@@ -134,5 +140,4 @@ class mainProgram():
 
 if __name__ == "__main__":
     print("Starting application...")
-    # TODO: implement queue and multiprocessing for this piece of code for multiple caputres
     mainProgram().run()

@@ -34,7 +34,7 @@ def generateDisparityMap(imageSource, mode=cs.path_mode, show=False):
         raise Exception()
 
     # TODO: check speckleRange=32 or 2
-    block = 10
+    block = 16
     p1 = 8*3*3**2
     p2 = 4*p1
     stereo = cv2.StereoSGBM_create(minDisparity=dispValues[0],
