@@ -5,7 +5,7 @@ BASELINE = 150 # in mm
 
 # Optimized values for disparity map generation
 # These values are dependent on hardware used
-DISP_VALUES = None
+DISP_VALUES = (16, 112)
 
 # Camera Constants
 FRAME_RATE = 30 # in fps
