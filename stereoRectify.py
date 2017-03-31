@@ -3,10 +3,10 @@ import cv2
 # Custom modules
 from common import constantSource as cs
 
-def stereoRectify(dataset, imageSource, mode=cs.path_mode):
+def stereoRectify(dataset, imageSource, mode=cs.path_mode, retQ=False):
     """
-    Returns the rectified images in a tuple (image_1, image_2) after rectification
-    and each image_# is an ndarray
+    Returns the rectified images in a tuple (image_1, image_2 [, Q]) after rectification
+    and each image_# is an ndarray. Q will be returned depending on retQ.
 
     dataset: Tuple of (cameraMatrix_1, distortion_coefficients_1,
                        cameraMatrix_2, distortion_coefficients_2,
@@ -16,6 +16,10 @@ def stereoRectify(dataset, imageSource, mode=cs.path_mode):
                  These can either be path or ndarray depending on 'mode' (see below)
     mode: Can be 'path_mode' or 'stream_mode'
           Specify whether 'imageSource' is path or ndarray
+    retQ: Can be True or False
+          Specify whether to return the perspective transformation matrix
+          True - return value will be tuple of 3-elements
+          False - return value will be tuple of 2-elements
     """
     if mode == cs.path_mode:
         img1 = cv2.imread(imageSource[0], 0)
@@ -45,7 +49,12 @@ def stereoRectify(dataset, imageSource, mode=cs.path_mode):
     dstImg1 = rectifyImage(img1, data)
     data = (camMtx2, distCoeffs2, R2, P2, imgSize)
     dstImg2 = rectifyImage(img2, data)
-    return (dstImg1, dstImg2)
+
+    if retQ:
+        res = (dstImg1, dstImg2, Q)
+    else:
+        res = (dstImg1, dstImg2)
+    return res
 
 def rectifyImage(imgSrc, data):
     camMtx, distCoeffs, R, P, imgSize = data
