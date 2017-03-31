@@ -41,5 +41,5 @@ print("Computing Disparity...")
 disp = dm.generateDisparityMap(imgSrc, cs.stream_mode, True)
 
 print("Generating point cloud...")
-pcg.generatePointCloud(disp, imgSrc, (min_disp, num_disp, None))
+pcg.generatePointCloud(disp, imgSrc)
 #zs.startScan(disp)
