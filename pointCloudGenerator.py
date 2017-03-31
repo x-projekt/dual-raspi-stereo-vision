@@ -61,3 +61,4 @@ def generatePointCloud(disp, imgs, Q=None, matFile=None):
         print("{X} saved".format(X=fileName))
     else:
         # TODO: insert code to append to a global 3D point cloud container variable
+        pass
