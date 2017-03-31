@@ -95,3 +95,4 @@ ENV/
 dmin.txt
 *.data
 *.ply
+!dataset/
