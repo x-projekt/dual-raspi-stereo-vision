@@ -41,9 +41,9 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
                                    P1=p1, P2=p2, disp12MaxDiff=1, uniquenessRatio=10,
                                    speckleWindowSize=100, speckleRange=32)
 
-    disparity = stereo.compute(img1, img2).astype(np.float32)/16
+    disp = stereo.compute(img1, img2).astype(np.float32)/16
     if show:
-        plt.imshow(disparity, "gray")
+        plt.imshow((disp-dispValues[0])/numDisp, "gray")
         # TODO: find effect of using (disp-min_disp)/num_disp instead of disparity
         plt.show()
-    return disparity
+    return disp
