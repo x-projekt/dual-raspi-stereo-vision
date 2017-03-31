@@ -14,6 +14,7 @@ from common import cameraRectify as cr
 import stereoRectify as sr
 import verifyEpipole as ve
 import disparityMap as dm
+import pointCloudGenerator as pcg
 from server import Server
 
 class mainProgram():
@@ -80,10 +81,11 @@ class mainProgram():
                     img2 = cr.rectifyImage((camMtx2, distCoeffs2), img2, cs.stream_mode)
 
                     dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
-                    imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
-
+                    data = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode, True)
+                    imgs = (data[0], data[1])
                     disp = dm.generateDisparityMap(imgs, cs.stream_mode, True)
 
+                    pcg.generatePointCloud(disp, imgs, data[2])
                     q = input("Try one more time (y/n): ")
                     if q.lower() == "y":
                         q = True
@@ -100,6 +102,7 @@ class mainProgram():
                     clientSocket.close()
                 self.setPixelFrame(currFrame, self.err)
             finally:
+                time.sleep(10)
                 self.sense.clear()
 
         elif socket.gethostname() == cs.getHostName(cs.slave_entity):
