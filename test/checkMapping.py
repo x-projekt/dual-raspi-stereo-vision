@@ -12,7 +12,7 @@ from common import constantSource as cs
 
 basePath = "image_{X}_{Y}.png"
 imgSrc = ()
-dispVal = (16, 112) # replace with cs.getDisparityValue()
+dispVal = cs.getDisparityValue() # replace with cs.getDisparityValue()
 
 print('loading images...')
 # for j in range(2):
@@ -38,7 +38,7 @@ print("Computing Disparity...")
 #                                uniquenessRatio=10,
 #                                speckleWindowSize=100,
 #                                speckleRange=32)
-disp = dm.generateDisparityMap(imgSrc, dispVal, cs.stream_mode, True)
+disp = dm.generateDisparityMap(imgSrc, cs.stream_mode, True)
 
 print("Generating point cloud...")
 pcg.generatePointCloud(disp, imgSrc, (min_disp, num_disp, None))

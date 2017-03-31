@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 # Custom modules
 from common import constantSource as cs
 
-def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False):
+def generateDisparityMap(imageSource, mode=cs.path_mode, show=False):
     """
     Returns the disparity map as ndarray
 
@@ -27,6 +27,7 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
         print(cs.getMessage(cs.invalid_mode))
         raise Exception()
 
+    dispValues = cs.getDisparityValue()
     numDisp = dispValues[1] - dispValues[0]
     if numDisp%16 != 0:
         print("Invalid Input: 'numDisparities' should be divisible by 16.")
@@ -44,6 +45,5 @@ def generateDisparityMap(imageSource, dispValues, mode=cs.path_mode, show=False)
     disp = stereo.compute(img1, img2).astype(np.float32)/16
     if show:
         plt.imshow((disp-dispValues[0])/numDisp, "gray")
-        # TODO: find effect of using (disp-min_disp)/num_disp instead of disparity
         plt.show()
     return disp

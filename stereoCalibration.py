@@ -35,7 +35,7 @@ while True:
         while n <= TOTAL_PICS:
             path1 = calibDir + cs.getCamera(1) + str(format(n, '04')) + ".png"
             path2 = calibDir + cs.getCamera(2) + str(format(n, '04')) + ".png"
-            print("\n\nPicture No: " + str(n))
+            print("\nPicture No: " + str(n))
             input("Press Return/Enter key when ready: ")
             img1 = ct.takePic()
             img2 = ct.takeRemotePic()

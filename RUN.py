@@ -80,19 +80,15 @@ class mainProgram():
                 dataset = (camMtx1, distCoeffs1, camMtx2, distCoeffs2, rotate, translate)
                 imgs = sr.stereoRectify(dataset, (img1, img2), cs.stream_mode)
 
-                # TODO: change this to user input
-                verify = True
-                if verify:
-                    ve.verifyEpipolarLines(imgs, cs.stream_mode)
-                disp = dm.generateDisparityMap(imgs, cs.getDisparityValue(), cs.stream_mode, True)
+                disp = dm.generateDisparityMap(imgs, cs.stream_mode, True)
 
                 # Multi-process this step
                 ## TODO: Add code to send disparity to slave pi for point cloud generation
                 ## TODO: Add code for potential region selection
                 ## TODO: Add code to call the required control planning system
-                cv2.imshow("Disparity", disp)
-                cv2.waitKey()
-                cv2.destroyAllWindows()
+                # cv2.imshow("Disparity", disp)
+                # cv2.waitKey()
+                # cv2.destroyAllWindows()
             except:
                 if currFrame == 2:
                     clientSocket.close()
