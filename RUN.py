@@ -10,7 +10,7 @@ import cv2
 from common import constantSource as cs
 from common import miscellaneous as msc
 from common import cameraTrigger as ct
-from common import cameraRectify as cr
+import cameraRectify as cr
 import stereoRectify as sr
 import verifyEpipole as ve
 import disparityMap as dm
@@ -32,7 +32,7 @@ class mainProgram():
     def run(self):
         if socket.gethostname() == cs.getHostName(cs.master_entity):
             # Starting the main process
-            print("Starting appliction...")
+            print("Starting main structure...")
             self.sense = SenseHat()
             self.sense.set_pixels(self.mainPixelMatrix)
 

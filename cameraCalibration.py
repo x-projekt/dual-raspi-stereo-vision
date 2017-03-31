@@ -5,7 +5,7 @@ import cv2
 # Custom modules
 from common import cameraTrigger as ct
 from common import constantSource as cs
-from common import cameraRectify as cr
+import cameraRectify as cr
 from common import miscellaneous as msc
 
 TOTAL_PICS = cs.getCalibReq()
