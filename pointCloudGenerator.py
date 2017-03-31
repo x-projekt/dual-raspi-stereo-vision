@@ -22,7 +22,7 @@ def write_ply(fn, verts, colors):
         np.savetxt(f, verts, fmt='%f %f %f %d %d %d ')
 
 def generatePointCloud(disp, imgs, data, matFile=None):
-    min_disp, num_disp = data
+    min_disp, num_disp, Q = data # use constant source instead
     imgL = imgs[0]
 
     print('generating 3d point cloud...',)
