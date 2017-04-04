@@ -30,6 +30,7 @@ STEREO_DIR = "stereo/"
 # File names
 CAMERA_CALIB_FILE = "_CamCalib.data"
 STEREO_CALIB_FILE = "SeteroCalib.data"
+POINT_CLOUD = "CloudMap.ply"
 
 TOTAL_NO_PICS = 30
 

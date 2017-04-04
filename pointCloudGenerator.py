@@ -56,7 +56,7 @@ def generatePointCloud(disp, imgs, Q=None, matFile=None):
     out_colors = colors[mask]
 
     if matFile is None:
-        fileName = "pointCloud.ply"
+        fileName = cs.getFileName(cs.cloud)
         write_ply(fileName, out_points, out_colors)
         print("{X} saved".format(X=fileName))
     else:

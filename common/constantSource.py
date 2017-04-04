@@ -16,6 +16,7 @@ rapid_capture = "BURST"
 camera = "CAMERA"
 stereo = "STEREO"
 root = "ROOT"
+cloud = "CLOUD"
 
 # Error message prompts
 invalid_mode = "MODE"
@@ -70,6 +71,8 @@ def getFileName(file, prefix=""):
         fileName = prefix + c.CAMERA_CALIB_FILE
     elif file == stereo:
         fileName = prefix + c.STEREO_CALIB_FILE
+    elif file == cloud:
+        fileName = c.POINT_CLOUD
     else:
         print("Invalid Input: invalid file name")
     return fileName
