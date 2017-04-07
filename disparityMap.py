@@ -31,14 +31,13 @@ def generateDisparityMap(imageSource, mode=cs.path_mode, show=False):
         print("Invalid Input: 'numDisparities' should be divisible by 16.")
         raise Exception()
 
-    # TODO: check speckleRange=32 or 2
-    block = 16
-    p1 = 8*3*3**2
+    block = 7
+    p1 = 8*4**4
     p2 = 4*p1
     stereo = cv2.StereoSGBM_create(minDisparity=dispValues[0],
                                    numDisparities=numDisp, blockSize=block,
                                    P1=p1, P2=p2, disp12MaxDiff=1, uniquenessRatio=10,
-                                   speckleWindowSize=100, speckleRange=32)
+                                   speckleWindowSize=100, speckleRange=2, mode=True)
 
     disp = stereo.compute(img1, img2).astype(np.float32)/16
     if show:
