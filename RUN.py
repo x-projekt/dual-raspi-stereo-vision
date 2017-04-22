@@ -129,7 +129,7 @@ class mainProgram():
             self.mainPixelMatrix[j] = color
             self.mainPixelMatrix[j+k] = color
             j += self.MATRIX_SIZE
-        time.sleep(2)
+        time.sleep(1)
         self.sense.set_pixels(self.mainPixelMatrix)
         return
 
