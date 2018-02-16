@@ -102,6 +102,6 @@ There are some test files available in _test/_ directory of the repository. Use 
 
 [PYIMAGESERACH-RPI-OPENCV-SETUP]: http://www.pyimagesearch.com/2016/04/18/install-guide-raspberry-pi-3-raspbian-jessie-opencv-3/
 
-[setup-image]: https://github.com/harshatech2012/common-res/blob/master/readme_dump/DRSV_setup_image.jpg
+[setup-image]: https://github.com/harshatech2012/shared-resources/blob/master/readme_dump/DRSV_setup_image.jpg
 
-[hardware-sync]: https://github.com/harshatech2012/common-res/blob/master/readme_dump/DRSV_hardware_trigger.png
+[hardware-sync]: https://github.com/harshatech2012/shared-resources/blob/master/readme_dump/DRSV_hardware_trigger.png
