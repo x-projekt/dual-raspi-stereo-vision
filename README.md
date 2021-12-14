@@ -79,7 +79,7 @@ The picture below shows the implementation of hardware synchronization of the tw
 #### Software Installation and Calibration
 Clone the repository at a convenient location on both the Pi's. In this example we have cloned the repository in _~/Documents/_ directories of Master and Slave Pi's respectively. Run the following command to clone the repositroy:
 ```
-$> git clone https://github.com/harshatech2012/dual-raspi-stereo-vision.git
+$> git clone https://github.com/x-projekt/dual-raspi-stereo-vision.git
 ```
 Now, we need to perform camera calibration aand stereo calibration. This sterp requires a checkerboard pattern. Print the checkerboard pattern in _calibData/res/checkerboard.pdf_ onto a flat surface and Run the following commands and follow the on-screen instructions.
 ```
