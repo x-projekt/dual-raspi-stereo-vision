@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="Harsha Vardhan">
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+
+	<!-- Custom CSS Stylesheets -->
+	<link rel="stylesheet" href="../css/global.css">
+	<link rel="stylesheet" 
+		href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+	
+	<title>Dual-Raspi Stereo Vision - Harsha Vardhan</title>
+</head>
+
+<body data-depth="1">
+	<!-- navigation bar -->
+    <div class="navbar-insert" data-select="projects">
+        <!-- see global.js -->
+    </div>
+
+	<!-- page header -->
+    <div class="header-insert" data-title="Dual-Raspi Stereo Vision" >
+        <!-- see global.js -->
+    </div>
+
+	<!-- content -->		
+	<div class="container content error-insert mb-3">
+		<div class="d-flex flex-row justify-content-end pt-3">
+			<div class="p-2">
+				<a href="https://grabcad.com/library/camera-mount-for-stereo-vision-1" target="_blank" title="view CAD model">
+					<i class="bi bi-files"></i>&nbsp;&nbsp;GrabCAD
+				</a>
+			</div>
+			<div class="p-2">
+				<a href="https://github.com/x-projekt/dual-raspi-stereo-vision" target="_blank" title="view on Github">
+					<i class="bi bi-github"></i>&nbsp;&nbsp;Github
+				</a>
+			</div>
+		</div>
+		<hr>
+		
+		<p class="lead">
+			This project aims at performing point-cloud construction through 3D Stereo-mapping using two Raspberry Pi's, each with a connected Pi Camera CSI module. 
+			The pi's and the cameras are fixed in position by attaching to a custom designed and then 3D printed fixture. Also, we use the 
+			<a href="https://www.opencv.org" target="_blank">OpenCV</a> library for processing images (more specifically for the implementations of the semi-global block matching algorithm).
+		</p>
+
+		<div class="row mt-3">
+			<div class="col-12">
+				<div class="display-4">
+					<a href="#" id="hardware-setup" class="title-hash">#</a>
+					<span class="title">Hardware Setup</span>
+				</div>
+			</div>
+			<div class="col-11 ms-3 ms-sm-5">
+				The most basic requirement is a frame to mount the electronics on to. 
+				So, for this purpose I've designed a <a href="https://grabcad.com/library/camera-mount-for-stereo-vision-1" target="_blank" title="view the CAD model">frame</a> (which can be 3D-printed). 
+				It has a <i>baseline distance</i> of 15 cm (see the figure below).
+				
+				<div class="my-4">
+					<figure class="figure d-flex flex-column align-items-center">
+						<img src="./dual-raspi-stereo-vision/mech-drawing.jpg" 
+							class="figure-img img-thumbnail img-fluid rounded" 
+							alt="engineering drawing of the frame" width="60%">
+						<figcaption class="figure-caption px-4"><span class="fw-bold">Figure</span>: the engineering drawing of the frame. All dimensions are in mm.</figcaption>
+					</figure>
+				</div>
+				
+				The following components are required:
+				<ul>
+					<li><a href="https://www.raspberrypi.org/products/raspberry-pi-2-model-b/" target="_blank">Raspberry Pi 2 Model B</a> (x1)</li>
+					<li><a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/" target="_blank">Raspberry Pi 3 Model B</a> (x1)</li>
+					<li><a href="https://www.raspberrypi.org/products/pi-noir-camera-v2/" target="_blank">Pi NoIR CSI Camera Module</a> (x2)</li>
+				</ul>
+				
+				<div class="note">
+					<span class="fw-bold">Note</span>: in the ensuing disussion, I will refer to Pi 2 as <i>Slave Pi</i> and Pi 3 as <i>Master Pi</i>. 
+				</div>
+				
+				<br><br>All the image processing is performed on the Master Pi. 
+				The CSI Camera modules are attached to each of the Pi's. 
+				And the two Pi's are connected to each other via an ethernet cable. 
+				Finally, the entire setup is then mounted onto the 3D printed frame.
+				<div class="my-4">
+					<figure class="figure d-flex flex-column align-items-center">
+						<img src="./dual-raspi-stereo-vision/actual.jpg" 
+							class="figure-img img-thumbnail img-fluid rounded" 
+							alt="Image of entire setup" width="60%">
+						<figcaption class="figure-caption px-4">
+							<span class="fw-bold">Figure</span>: the engineering drawing of the frame. All dimensions are in mm.
+							Also, Make sure that the two cameras are firmly fixed to the frame. 
+							Any movement of cameras relative to each other might require re-doing of the calibration process.
+						</figcaption>
+					</figure>
+				</div>
+			</div>
+		</div>
+	
+		<div class="row mt-3">
+			<div class="col-12">
+				<div class="display-4">
+					<a href="#" id="software-setup" class="title-hash">#</a>
+					<span class="title">Software Setup</span>
+				</div>
+			</div>
+			<div class="col-11 ms-3 ms-sm-5">
+				<div class="fs-2">Getting started</div>
+				Flash two SD cards with the Rasbpian OS. 
+				(<span class="text-muted">You might follow the instaructions <a href="https://www.raspberrypi.org/documentation/installation/installing-images/" target="_blank">here</a></span>). 
+				Put the SD card into the Pi's and boot into it. 
+				Now, connect the Pi-NoIR Camera modules to each of the borads. 
+				Then in the device preferences enable the Camera, GPIO and SSH ports.
+				
+				<br><br>
+				<div class="note">
+					<span class="fw-bold">Note</span>: you may also access the device preferences using the following command in the terminal and follow the instructions accordingly:
+					<div class="w-100 text-center">
+						<code>
+							$&gt; sudo raspi-config
+						</code>
+					</div>
+				</div>
+				
+				<br>After enabling the Camera, SSH and GPIO ports, run the following commands, to install the libraries for accessing the Cameras and Sense Hat. </p>
+				<div class="d-flex justify-content-center">
+					<code class="d-block">  
+						<br>$&gt; sudo apt-get update 
+						<br> $&gt; sudo apt-get upgrade
+					</code>
+				</div>
+				
+				<br>The above commands will install the required python libraries and also update the raspbian OS. 
+				Now, we need to setup OpenCV on Raspberry Pi, we will be compiling OpenCV from source code and installing it. 
+				The steps for setting up OpenCV 3 in Raspberry Pi 3 model B are available at this <a href="http://www.pyimagesearch.com/2016/04/18/install-guide-raspberry-pi-3-raspbian-jessie-opencv-3/" target="_blank">link</a> on pyimagesearach. Now that we have installed OpenCV and device drivers, we can move on to software setup.</p>
+			
+				<div class="fs-2">Camera Synchronization</div>
+				Stereo vision depends heavily on synchronization of images taken from he two cameras. 
+				Since, we are using two boards it is necessary for us to synchronize the imgae capture process. 
+				This is especially needed for setup's to be mounted on mobile platforms (such as drones, robots, etc.). 
+				
+				<br><br>We have two suggested methods for performing camera synchronization
+				<ul>
+					<li>NTP (Network Time Protocol) synchronization
+						<ul>
+							<li>This method useses synchronized time to perform cameras synchronization. We run two independent
+								scripts on the two borads, each of which takes pictures at fixed intervals of time. </li>
+							<li>This method is accurate but we can&#39;t control when to take pictures. So, we won&#39;t be able to
+								correct camera triggers for any unexpected changes in execution times. </li>
+						</ul>
+					</li>
+					<li>Hardware (pulse-based) Synchronization:
+						<ul>
+							<li>This method uses pulses of voltage for triggering the cameras. We run independent scripts on the each
+								of Pi&#39;s, which moniter hte GPIO pins for pulses.</li>
+							<li>This method is simple and robust. This also allows for controlling when the camera&#39;s are
+								tirggered. The figure below shows the hardware trigger method. </li>
+						</ul>
+					</li>
+				</ul>
+				<div class="note">
+					<span class="fw-bold">Note</span>: the implementation of the above two methods is still under development.
+				</div>
+
+				<br><br><div class="fs-4">NTP Synchronization</div>
+				For NTP Synchronization, we setup and NTP server on the Master Pi and synchronize time on the Slave Pi. 
+				For this, follow the following steps:
+				<ul>
+					<li>Setup static IP address for each of the Pi's.
+						
+						<br>Append the following lines to <code>etc/dhcpcd.conf</code> on Master Pi.
+							<div class="d-flex justify-content-center">
+								<code> 
+									interface eth0
+									<br>static ip_address=192.168.120.170
+									<br>static routers=192.168.120.1
+									<br>static domain_name_servers=192.168.120.1
+								</code>
+							</div> 
+						<br>Append the following lines to <code>etc/dhcpcd.conf</code> on Slave Pi.
+							<div class="d-flex justify-content-center">
+								<code class="d-block">  
+									interface eth0
+									<br>static ip_address=192.168.120.10
+									<br>static routers=192.168.120.1
+									<br>static domain_name_servers=192.168.120.1
+								</code>
+							</div>
+					</li>
+					<li>Setup NTP Server-client on Master and Slave Pi's respectively.
+						<br> Replace the file <code>etc/ntp.conf</code> with the file in <code>piConfig/</code> directory of this repository. 
+						The files are named as per the Pi on which they belong, i.e. <code>npt.conf.master</code> to replace <code>etc/ntp.conf</code> on the Master Pi, and similarly for the Slave Pi.
+						<br> Now, to force synchronization of time on Slave Pi, run the following commands.
+						<div class="d-flex justify-content-center">
+							<code class="d-block">  
+								<br>$&gt; sudo service ntp stop
+								<br>$&gt; sudo ntpd -gq
+								<br>$&gt; sudo service ntp start
+							</code>
+						</div>
+					</li>
+				</ul>
+				<div class="note">
+					<span class="fw-bold">Note:</span> the time on Master Pi need not be in sync with the real-world time. 
+					But the time on the Slave Pi must be synchronized with that of the Master Pi, and the above steps ensure that.
+				</div>
+			
+				<div class="fs-4">Hardware Synchronization</div>
+				<figure class="figure d-flex flex-column align-items-center">
+					<img src="./dual-raspi-stereo-vision/hardware-sync.jpg" 
+						class="figure-img img-thumbnail img-fluid rounded" 
+						alt="hardware synchronization schema" width="60%">
+					<figcaption class="figure-caption px-4">
+						<span class="fw-bold">Figure</span>: this figure shows a <i>possible</i> schema for the implementation of hardware synchronization system.
+					</figcaption>
+				</figure>	
+				
+				<div class="fs-2">Software Installation and Calibration</div>
+				Clone the repository at a convenient location on both the Pi's. 
+				In this example we have cloned the repository at <code>~/Documents/</code> directories of Master and Slave Pi's respectively. 
+				Run the following command to clone the repositroy:
+				<div class="d-flex justify-content-center">
+					<code class="d-block">  
+						<br>$&gt; git clone https://github.com/x-projekt/dual-raspi-stereo-vision.git
+					</code>
+				</div>
+				
+				<br>Now, we need to perform camera calibration aand stereo calibration. 
+				This step requires a checkerboard pattern. 
+				Print the checkerboard pattern in <code>calibData/res/checkerboard.pdf</code> onto a flat surface and run the following commands and follow the on-screen instructions.
+				<div class="d-flex justify-content-center">
+					<code class="d-block">  
+						<br>$&gt; python3 cameraCalibration.py
+						<br>...
+						<br>$&gt; python3 stereoCalibration.py
+						<br>...
+					</code>
+				</div>
+				<div class="note">
+					<span class="fw-bold">Note</span>: for better results during calibration hold the checherboard pattern as close to the camera as possible. 
+					And make sure that the checkerboard pattern is on a flat surface.
+				</div>
+			</div>
+		</div>
+				
+		<div class="row mt-3">
+			<div class="col-12">
+				<div class="display-4">
+					<a href="#" id="run" class="title-hash">#</a>
+					<span class="title">Running the application</span>
+				</div>
+			</div>
+			<div class="col-11 ms-3 ms-sm-5">
+				Once the calibration has completed successfully. 
+				Start the application by running the <code>RUN.py</code> file. 
+				Run the following command in terminal and follow the onscreen instructions.
+				<div class="d-flex justify-content-center">
+					<code class="d-block">  
+						<br>$&gt; python3 RUN.py
+					</code>
+				</div>
+				
+				<br>There are some test files available in the <code>test/</code> directory of the repository. 
+				Use them for testing the calibatration and performance of the sytem.
+			</div>
+		</div>
+	</div>
+
+	<!-- page footer -->
+	<div class="footer-insert">
+		<!-- see global.js-->
+	</div>		
+
+	<!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" 
+		integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
+	</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" 
+		integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
+	</script>
+	
+	<!-- Custom scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="../js/global.js"></script>
+</body>
+
+</html>
